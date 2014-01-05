@@ -1,0 +1,6 @@
+*~
+*.orig
+*.sw?
+.DS_Store
+node_modules/
+server/secrets.coffee
