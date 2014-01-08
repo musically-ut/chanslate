@@ -14,22 +14,27 @@ Meteor.startup ->
 
             if not this.isSimulation
                 this.unblock()
-                res = HTTP.call(
-                    "POST",
-                    url,
-                    { 
-                        params:
-                            source : source
-                            target : target
-                            # TODO: Move `key` to headers
-                            key    : global.GOOGLE_TRANSLATE_API 
-                            q      : text
-                        headers:
-                            'X-HTTP-Method-Override': 'GET'
-                    }
-                )
 
-                console.log(JSON.stringify(res, null, 2))
-                res.data.data.translations[0].translatedText
+                if Meteor.settings.GOOGLE_TRANSLATE_API?
+                    res = HTTP.call(
+                        "POST",
+                        url,
+                        {
+                            params:
+                                source : source
+                                target : target
+                                # TODO: Move `key` to headers
+                                key    : Meteor.settings.GOOGLE_TRANSLATE_API
+                                q      : text
+                            headers:
+                                'X-HTTP-Method-Override': 'GET'
+                        }
+                    )
+
+                    console.log(JSON.stringify(res, null, 2))
+                    res.data.data.translations[0].translatedText
+                else
+                    console.error('Proper settings not provided!')
+                    'Translation not available'
     )
 
