@@ -1,13 +1,54 @@
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans|Ubuntu:500' rel='stylesheet' type='text/css'>
   <title>chanslate</title>
 </head>
 
 <body>
-  {{> hello}}
+  <div id="container">
+    <div class="ui grid">
+      <div class="sixteen wide column">
+        <h1 class="ui header banner">Chanslate</h1>
+      </div>
+
+      {{>showMessages}}
+      {{>addMessage}}
+
+    </div>
+  </div>
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+<template name="addMessage">
+ <div class="src eight wide column">
+   <input name="src" type="text"
+          placeholder="Type in English..." />
+ </div>
+ <div class="dst eight wide column">
+   <input name="dst" type="text"
+          placeholder="Type in German...">
+ </div>
+</template>
+
+<template name="showMessages">
+  <div class="messages ui sixteen wide column">
+    {{#each messages}}
+     <div class="user-name">
+        {{userName}}
+     </div>
+     <div class="ui eight wide column">
+       {{#if src.text}}
+         {{src.text}}
+       {{else}}
+         Loading ...
+       {{/if}}
+     </div>
+     <div class="ui eight wide column">
+       {{#if dst.text}}
+         {{dst.text}}
+       {{else}}
+         Loading ...
+       {{/if}}
+     </div>
+    {{/each}}
+  </div>
 </template>
