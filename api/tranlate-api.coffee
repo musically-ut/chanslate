@@ -30,18 +30,20 @@ translate = (text, source, target) ->
         res.data.data.translations[0].translatedText
     else
         console.error('Proper settings not provided!')
-        'Translation not available.'
+        'No translate API key available.'
 
 createMessage = (userName, srcMsg, dstMsg) ->
     {
         userName: userName
         at: new Date()
         src:
-            lang: srcLang
-            text: srcMsg
+            lang     : srcLang
+            text     : srcMsg
+            original : srcMsg != null
         dst:
-            lang: dstLang
-            text: dstMsg
+            lang     : dstLang
+            text     : dstMsg
+            original : dstMsg != null
     }
 
 checkParams = (userName, msg) ->
@@ -51,9 +53,9 @@ checkParams = (userName, msg) ->
 
 truncMessage = (msg, limit) ->
     if msg.length > limit
-        msg = msg.substr(0, limit)
-
-    msg
+        msg.substr(0, limit)
+    else
+        msg
 
 
 

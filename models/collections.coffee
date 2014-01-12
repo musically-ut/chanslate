@@ -7,12 +7,16 @@
             'src.text':
                 type: String
                 optional: true
+            'src.original':
+                type: Boolean
 
             'dst.lang':
                 type: String
             'dst.text':
                 type: String
                 optional: true
+            'dst.original':
+                type: Boolean
 
             userName:
                 type: String
