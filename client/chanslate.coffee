@@ -30,24 +30,21 @@ haiku = ->
 Meteor.subscribe('chanslateMessages')
 Session.set('userName', haiku())
 
-# Behavior helpers
-timer = null
-autoScroll = true
-scrollToBottom = ->
-    clearTimeout(timer)
-    if autoScroll
-        timer = setTimeout(
-            -> $('#chanslate-content').animate({scrollTop: 999999}, 1000),
-            90
-        )
-
 # Global helpers
 Handlebars.registerHelper("unescape",  (html) ->
     e = document.createElement('div')
     e.innerHTML = html
     if e.childNodes.length == 0 then '' else e.childNodes[0].nodeValue
 )
-Handlebars.registerHelper("ago", (time) -> moment(time).fromNow())
+
+# Hack to get time to update every 5 seconds.
+updateTime = -> Session.set('now', new Date())
+Meteor.setInterval(updateTime, 5000)
+
+Handlebars.registerHelper("ago", (time) ->
+    now = Session.get('now')
+    moment(time).from(now)
+)
 
 ###
 # Set a color based on handle
@@ -62,13 +59,15 @@ colorHandle = (handle) ->
 
 Handlebars.registerHelper('colorize', -> colorHandle(this["userName"]))
 
+scrollToBottom =  ->
+    $('html, body').animate({ scrollTop: 99999999 }, "slow")
+
 # Template helpers
 Template.showMessages.helpers({
     messages: ->
-        ChanslateMessages.find({}, {
-            sort:
-                at: 1
-        })
+        cursor = ChanslateMessages.find({}, {sort: { at: 1 }})
+        cursor.observe({ added: scrollToBottom })
+        cursor
 })
 
 Template.postMessage.events(
