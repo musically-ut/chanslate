@@ -1,6 +1,6 @@
 {
   "packages": {
-    "semantic-ui": {},
-    "collection2": {}
+    "collection2": {},
+    "semantic-ui-less": {}
   }
 }
