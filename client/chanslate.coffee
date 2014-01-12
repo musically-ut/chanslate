@@ -59,8 +59,14 @@ colorHandle = (handle) ->
 
 Handlebars.registerHelper('colorize', -> colorHandle(this["userName"]))
 
-scrollToBottom =  ->
-    $('html, body').animate({ scrollTop: 99999999 }, "slow")
+scrollToBottom = _.debounce(
+    ->
+        console.log('Debouncing')
+        $('html, body').animate({ scrollTop: 99999 }, "slow")
+    ,
+    100
+)
+
 
 # Template helpers
 Template.showMessages.helpers({
@@ -86,7 +92,6 @@ Template.postMessage.events(
 
             textBox.value = ''
             textBox.focus()
-            autoScroll = true
 
     'keyup input[name="dst"]': (ev, template) ->
         if ev.which == 13
@@ -103,5 +108,4 @@ Template.postMessage.events(
 
             textBox.value = ''
             textBox.focus()
-            autoScroll = true
 )
