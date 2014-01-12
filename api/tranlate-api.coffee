@@ -3,6 +3,32 @@ url = 'https://www.googleapis.com/language/translate/v2'
 srcLang = 'en'
 dstLang = 'de'
 
+createMessage = (userName, srcMsg, dstMsg) ->
+    {
+        userName: userName
+        at: new Date()
+        src:
+            lang     : srcLang
+            text     : srcMsg
+            original : srcMsg != null
+        dst:
+            lang     : dstLang
+            text     : dstMsg
+            original : dstMsg != null
+    }
+
+checkParams = (userName, msg) ->
+    check(userName , String)
+    check(msg      , String)
+
+
+truncMessage = (msg, limit) ->
+    if msg.length > limit
+        msg.substr(0, limit)
+    else
+        msg
+
+
 translate = (text, source, target) ->
     check(text   , String)
     check(source , String)
@@ -32,38 +58,26 @@ translate = (text, source, target) ->
         console.error('Proper settings not provided!')
         'No translate API key available.'
 
-createMessage = (userName, srcMsg, dstMsg) ->
-    {
-        userName: userName
-        at: new Date()
-        src:
-            lang     : srcLang
-            text     : srcMsg
-            original : srcMsg != null
-        dst:
-            lang     : dstLang
-            text     : dstMsg
-            original : dstMsg != null
-    }
 
-checkParams = (userName, msg) ->
-    check(userName , String)
-    check(msg      , String)
-
-
-truncMessage = (msg, limit) ->
-    if msg.length > limit
-        msg.substr(0, limit)
-    else
-        msg
-
-
+translateAndPopulate = (msg, sourceLang, targetLang, _id, key) ->
+    modifier = {}
+    try
+        translatedMsg = translate(msg, sourceLang, targetLang)
+        modifier[ key ] = translatedMsg
+        ChanslateMessages.update({ _id: _id }, {
+            $set: modifier
+        })
+    catch error
+        console.error('Could not translate: ', error)
+        modifier[ key ] = 'Could not translate.'
+        ChanslateMessages.update({ _id: _id }, {
+            $set: modifier
+        })
 
 
 Meteor.startup ->
     Meteor.methods(
         addSrcMessage: (userName, msg) ->
-            # TODO (UU): This can fail.
             console.log('Adding src message:', msg, ' ~ ', userName)
 
             checkParams(userName, msg)
@@ -78,14 +92,9 @@ Meteor.startup ->
                 _id = ChanslateMessages.insert(
                     createMessage(userName, msg, null)
                 )
-                translatedMsg = translate(msg, srcLang, dstLang)
-                ChanslateMessages.update({ _id: _id }, {
-                    $set:
-                        'dst.text': translatedMsg
-                })
+                translateAndPopulate(msg, srcLang, dstLang, _id, 'dst.text')
 
         addDstMessage: (userName, msg) ->
-            # TODO (UU): This can fail.
             console.log('Adding dst message:', msg, ' ~ ', userName)
 
             checkParams(userName, msg)
@@ -96,11 +105,8 @@ Meteor.startup ->
                 _id = ChanslateMessages.insert(
                     createMessage(userName, null, msg)
                 )
-                translatedMsg = translate(msg, dstLang, srcLang)
-                ChanslateMessages.update({ _id: _id }, {
-                    $set:
-                        'src.text': translatedMsg
-                })
+                translateAndPopulate(msg, dstLang, srcLang, _id, 'src.text')
+
     )
 
 
