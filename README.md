@@ -34,3 +34,7 @@ The settings.json should be of the form:
     meteor deploy chanslate.meteor.com --settings settings.json --i <identity-key>
 
 See note above in **Running** section for `settings.json`.
+
+## Credits
+
+This work draws heavily (in code as well as spirit) from [ChatWorks](http://chatworks.in/). Check out [their github page too.](https://github.com/Pent/chatworks).
