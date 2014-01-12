@@ -56,7 +56,12 @@
       {{/if}}
     </div>
   {{else}}
-    <div class="ui active mini inline loader"></div>
+    <div class="ui segment message">
+      Translating ...
+      <div class="ui active dimmer">
+        <div class="ui mini loader"></div>
+      </div>
+    </div>
   {{/if}}
 </template>
 
