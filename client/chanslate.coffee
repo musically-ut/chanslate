@@ -30,6 +30,39 @@ haiku = ->
 Meteor.subscribe('chanslateMessages')
 Session.set('userName', haiku())
 
+# Behavior helpers
+timer = null
+autoScroll = true
+scrollToBottom = ->
+    clearTimeout(timer)
+    if autoScroll
+        timer = setTimeout(
+            -> $('#chanslate-content').animate({scrollTop: 999999}, 1000),
+            90
+        )
+
+# Global helpers
+Handlebars.registerHelper("unescape",  (html) ->
+    e = document.createElement('div')
+    e.innerHTML = html
+    if e.childNodes.length == 0 then '' else e.childNodes[0].nodeValue
+)
+Handlebars.registerHelper("ago", (time) -> moment(time).fromNow())
+
+###
+# Set a color based on handle
+# @param handle
+# @returns string
+###
+colorHandle = (handle) ->
+    sumi = 0
+    sumi += handle.charCodeAt(i) for i in [0 .. (handle.length - 1)]
+    hue = sumi % 360
+    'hsl('+hue+',46%,75%)'
+
+Handlebars.registerHelper('colorize', -> colorHandle(this["userName"]))
+
+# Template helpers
 Template.showMessages.helpers({
     messages: ->
         ChanslateMessages.find({}, {
@@ -38,8 +71,7 @@ Template.showMessages.helpers({
         })
 })
 
-Template.addMessage.events(
-
+Template.postMessage.events(
     'keyup input[name="src"]': (ev, template) ->
         if ev.which == 13
             console.log('Handling source message')
@@ -55,9 +87,9 @@ Template.addMessage.events(
 
             textBox.value = ''
             textBox.focus()
+            autoScroll = true
 
     'keyup input[name="dst"]': (ev, template) ->
-
         if ev.which == 13
             console.log('Handling dst message')
             textBox = template.find('[name="dst"]')
@@ -72,4 +104,5 @@ Template.addMessage.events(
 
             textBox.value = ''
             textBox.focus()
+            autoScroll = true
 )

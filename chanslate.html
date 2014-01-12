@@ -1,54 +1,78 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <link href='http://fonts.googleapis.com/css?family=Open+Sans|Ubuntu:500' rel='stylesheet' type='text/css'>
-  <title>chanslate</title>
+  <title>Chanslate</title>
 </head>
 
 <body>
   <div id="container">
-    <div class="ui grid">
-      <div class="sixteen wide column">
-        <h1 class="ui header banner">Chanslate</h1>
-      </div>
+    <div class="ui sixteen wide column">
+      <h1 class="ui header banner">Chanslate</h1>
+    </div>
 
+    <div id="chanslate-content">
       {{>showMessages}}
-      {{>addMessage}}
-
+      {{>postMessage}}
     </div>
   </div>
 </body>
 
-<template name="addMessage">
- <div class="src eight wide column">
-   <input name="src" type="text"
-          placeholder="Type in English..." />
- </div>
- <div class="dst eight wide column">
-   <input name="dst" type="text"
-          placeholder="Type in German...">
- </div>
+<template name="showMessages">
+  <ul class="messages">
+    {{#each messages}}
+      <li class="ui">
+
+        <div class="msg-info">
+          <span class="user-name" style="color:{{#colorize}}{{/colorize}}">
+            {{userName}}
+          </span>
+          <span class="ui label">{{ago at}}</span>
+        </div>
+
+        <div class="ui two stackable column grid msg-detail">
+          <div class="column src">{{>message src}}</div>
+          <div class="column dst">{{>message dst}}</div>
+        </div>
+      </li>
+    {{/each}}
+  </ul>
 </template>
 
-<template name="showMessages">
-  <div class="messages ui sixteen wide column">
-    {{#each messages}}
-     <div class="user-name">
-        {{userName}}
-     </div>
-     <div class="ui eight wide column">
-       {{#if src.text}}
-         {{src.text}}
-       {{else}}
-         Loading ...
-       {{/if}}
-     </div>
-     <div class="ui eight wide column">
-       {{#if dst.text}}
-         {{dst.text}}
-       {{else}}
-         Loading ...
-       {{/if}}
-     </div>
-    {{/each}}
-  </div>
+<template name="message">
+  {{#if text}}
+    <div class="ui segment message">
+      <!-- <span class="ui top left attached label">{{lang}}</span> -->
+      {{unescape text}}
+
+      {{#if original}}
+        <span class="ui right red corner label">
+          <i class="star icon"></i>
+        </span>
+      {{else}}
+        <span class="ui right corner label">
+          {{lang}}
+        </span>
+      {{/if}}
+    </div>
+  {{else}}
+    <div class="ui active mini inline loader"></div>
+  {{/if}}
 </template>
+
+<template name="postMessage">
+  <div class="ui horizontal icon divider">
+    <i class="circular icon pencil"></i>
+  </div>
+  <form class="ui two stackable form column grid post-message">
+    <span class="column">
+      <input name="src" type="text"
+             placeholder="Type in English..." />
+    </span>
+    <span class="column">
+      <input name="dst" type="text"
+             placeholder="Type in German..." />
+    </span>
+  </form>
+</template>
+
+

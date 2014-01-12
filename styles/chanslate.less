@@ -11,7 +11,7 @@ body, html {
 }
 
 #container {
-  width            : 800px;
+  max-width        : 1024px;
   margin           : auto;
   background-color : #eff;
   color            : #333;
@@ -31,7 +31,42 @@ h1 {
 }
 
 ul.messages {
+    padding         : 0;
+    margin          : 0;
+
     li {
-        list-item-style: none;
+        list-style-type : none;
+        padding         : 0;
+        margin          : 0;
+
+        .msg-info {
+            margin-left: 1em;
+            .user-name {
+                font-style: italic;
+            }
+        }
+
+        .message {
+            // To allow labels to appear nicely.
+            position    : relative;
+        }
+
+        .msg-detail {
+            .src, .dst {
+                &.column {
+                    // This is because semantic-ui's grid sets the margin using `!important`.
+                    margin-top  : 0 !important;
+                    padding-top : 0 !important;
+                }
+            }
+        }
+    }
+}
+
+.post-message.stackable.form {
+    .column {
+        // This is because semantic-ui's grid sets the margin using `!important`.
+        margin-top  : 0 !important;
+        padding-top : 0 !important;
     }
 }
