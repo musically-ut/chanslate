@@ -27,7 +27,9 @@
           <span class="user-name" style="color:{{#colorize}}{{/colorize}}">
             {{userName}}
           </span>
-          <span class="ui label">{{ago at}}</span>
+          <span class="ui label">
+            <time class="message-time" datetime="{{toISO at}}">{{ago at}}</time>
+          </span>
         </div>
 
         <div class="ui two stackable column grid msg-detail">

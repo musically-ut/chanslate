@@ -36,15 +36,16 @@ Handlebars.registerHelper("unescape",  (html) ->
     e.innerHTML = html
     if e.childNodes.length == 0 then '' else e.childNodes[0].nodeValue
 )
+Handlebars.registerHelper("ago", (time) -> moment(time).fromNow())
+Handlebars.registerHelper("toISO", (date) -> date.toISOString())
 
 # Hack to get time to update every 5 seconds.
-updateTime = -> Session.set('now', new Date())
-Meteor.setInterval(updateTime, 5000)
-
-Handlebars.registerHelper("ago", (time) ->
-    now = Session.get('now')
-    moment(time).from(now)
+updateTime = -> $('time.message-time').each((idx, elem) ->
+    $elem = $(elem)
+    msgTime = $elem.attr('datetime')
+    $elem.text(moment(msgTime).fromNow())
 )
+Meteor.setInterval(updateTime, 5000)
 
 ###
 # Set a color based on handle
