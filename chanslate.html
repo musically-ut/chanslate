@@ -13,10 +13,18 @@
 
     <div id="chanslate-content">
       {{>showMessages}}
+      {{>requestNotificationPermission}}
       {{>postMessage}}
     </div>
   </div>
 </body>
+
+<template name="requestNotificationPermission">
+  {{#if needsPermissionAndSupported}}
+    Click <button id="request-notification-permission">here</button> 
+    to allow notifications.
+  {{/if}}
+</template>
 
 <template name="showMessages">
   <ul class="messages">
