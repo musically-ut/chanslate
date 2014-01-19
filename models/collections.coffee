@@ -1,22 +1,22 @@
+MessageSchema = new SimpleSchema({
+    lang:
+        type: String
+    text:
+        type: String
+    createdBy:
+        type: String
+    error:
+        type: Boolean
+})
+
 @ChanslateMessages = new Meteor.Collection2(
     'chanslateMessages',
     {
         schema:
-            'src.lang':
-                type: String
-            'src.text':
-                type: String
-                optional: true
-            'src.original':
-                type: Boolean
-
-            'dst.lang':
-                type: String
-            'dst.text':
-                type: String
-                optional: true
-            'dst.original':
-                type: Boolean
+            original:
+                type: MessageSchema
+            translations:
+                type: [MessageSchema]
 
             userName:
                 type: String

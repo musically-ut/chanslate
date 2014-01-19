@@ -21,8 +21,10 @@
 
 <template name="requestNotificationPermission">
   {{#if needsPermissionAndSupported}}
-    Click <button id="request-notification-permission">here</button> 
-    to allow notifications.
+    <p>
+      Click <button id="request-notification-permission" class="ui mini teal button">here</button>
+      to allow notifications.
+    </p>
   {{/if}}
 </template>
 
@@ -30,19 +32,34 @@
   <ul class="messages">
     {{#each messages}}
       <li class="ui">
-
         <div class="msg-info">
           <span class="user-name" style="color:{{#colorize}}{{/colorize}}">
             {{userName}}
           </span>
-          <span class="ui label">
-            <time class="message-time" datetime="{{toISO at}}">{{ago at}}</time>
+
+          <span class="ui small label time">
+            <time class="message-time" datetime="{{toISO at}}">
+              {{ago at}}
+            </time>
           </span>
         </div>
 
-        <div class="ui two stackable column grid msg-detail">
-          <div class="column src">{{>message src}}</div>
-          <div class="column dst">{{>message dst}}</div>
+        <div class="ui msg-detail">
+            <div class="ui top attached src message-box segment">
+              {{>message original}}
+            </div>
+
+            {{#foreach translations}}
+              {{#if $last}}
+                <div class="ui bottom attached dst message-box segment">
+                  {{>message}}
+                </div>
+              {{else}}
+                <div class="ui attached dst message-box segment">
+                  {{>message}}
+                </div>
+              {{/if}}
+            {{/foreach}}
         </div>
       </li>
     {{/each}}
@@ -51,28 +68,19 @@
 
 <template name="message">
   {{#if text}}
-    <div class="ui segment message">
-      <!-- <span class="ui top left attached label">{{lang}}</span> -->
+    <p class="message">
       {{unescape text}}
-
-      {{#if original}}
-        <span class="ui right teal corner label">
-          <i class="star icon"></i>
-        </span>
-      {{else}}
-        <span class="ui right corner label">
-          {{lang}}
-        </span>
-      {{/if}}
-    </div>
+      {{>msgInfo}}
+    </p>
   {{else}}
-    <div class="ui segment message">
-      Translating ...
-      <div class="ui active dimmer">
-        <div class="ui mini loader"></div>
+      <div class="ui active inverted dimmer">
+        <div class="ui mini text loader">Translating ...</div>
       </div>
-    </div>
   {{/if}}
+</template>
+
+<template name="msgInfo">
+  <label class="ui label info">{{lang}} / {{createdBy}}</label>
 </template>
 
 <template name="postMessage">

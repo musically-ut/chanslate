@@ -3,18 +3,25 @@ url = 'https://www.googleapis.com/language/translate/v2'
 srcLang = 'en'
 dstLang = 'de'
 
-createMessage = (userName, srcMsg, dstMsg) ->
+createMessage = (lang, text, createdBy, error) ->
+    check(lang      , String)
+    check(text      , String)
+    check(createdBy , String)
+    check(error     , Boolean)
     {
-        userName: userName
-        at: new Date()
-        src:
-            lang     : srcLang
-            text     : srcMsg
-            original : srcMsg != null
-        dst:
-            lang     : dstLang
-            text     : dstMsg
-            original : dstMsg != null
+        lang      : lang
+        text      : text
+        createdBy : createdBy
+        error     : error
+    }
+
+
+createChanslateMsgDoc = (userName, origMsg, origLang) ->
+    {
+        userName     : userName
+        at           : new Date()
+        original     : createMessage(origLang, origMsg, userName, false)
+        translations : []
     }
 
 checkParams = (userName, msg) ->
@@ -59,19 +66,29 @@ translate = (text, source, target) ->
         'No translate API key available.'
 
 
-translateAndPopulate = (msg, sourceLang, targetLang, _id, key) ->
+translateAndPopulate = (msg, sourceLang, targetLang, _id) ->
     modifier = {}
     try
         translatedMsg = translate(msg, sourceLang, targetLang)
-        modifier[ key ] = translatedMsg
+        modifier.translations =
+            createMessage(targetLang , translatedMsg, 'google', false)
+
         ChanslateMessages.update({ _id: _id }, {
-            $set: modifier
+            $push: modifier
         })
+
     catch error
         console.error('Could not translate: ', error)
-        modifier[ key ] = 'Could not translate.'
+        modifier.translations =
+            createMessage(
+                targetLang,
+                'Could not translate.',
+                'google',
+                true
+            )
+
         ChanslateMessages.update({ _id: _id }, {
-            $set: modifier
+            $push: modifier
         })
 
 
@@ -85,14 +102,10 @@ Meteor.startup ->
 
             if not this.isSimulation
                 this.unblock()
-                console.log(
-                    'Inserting',
-                    createMessage(userName, msg, null)
-                )
                 _id = ChanslateMessages.insert(
-                    createMessage(userName, msg, null)
+                    createChanslateMsgDoc(userName, msg, srcLang)
                 )
-                translateAndPopulate(msg, srcLang, dstLang, _id, 'dst.text')
+                translateAndPopulate(msg, srcLang, dstLang, _id)
 
         addDstMessage: (userName, msg) ->
             console.log('Adding dst message:', msg, ' ~ ', userName)
@@ -103,10 +116,9 @@ Meteor.startup ->
             if not this.isSimulation
                 this.unblock()
                 _id = ChanslateMessages.insert(
-                    createMessage(userName, null, msg)
+                    createChanslateMsgDoc(userName, msg, dstLang)
                 )
-                translateAndPopulate(msg, dstLang, srcLang, _id, 'src.text')
-
+                translateAndPopulate(msg, dstLang, srcLang, _id)
     )
 
 

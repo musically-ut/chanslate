@@ -40,32 +40,47 @@ ul.messages {
         margin          : 0;
 
         .msg-info {
-            margin-left: 1em;
+            margin-left   : 1em;
+            margin        : 1px;
+            margin-bottom : 2px;
+
             .user-name {
                 font-style: italic;
             }
+
+            .time {
+                padding: 0.25em 0.8em;
+            }
+        }
+
+        .message-box.segment {
+            padding: 0.25em;
         }
 
         .message {
             // To allow labels to appear nicely.
-            position    : relative;
+            position : relative;
+
+            .info {
+                float          : right;
+                margin-top     : 0em;
+                padding-top    : 0.25em;
+                padding-bottom : 0.25em;
+            }
         }
 
         .msg-detail {
-            .src, .dst {
-                &.column {
-                    // This is because semantic-ui's grid sets the margin using `!important`.
-                    margin-top  : 0 !important;
-                    padding-top : 0 !important;
-                }
+            .ui.top.attached.message-box.segment {
+                top: -1px;
             }
         }
     }
 }
 
-.post-message.stackable.form {
+.post-message.stackable.grid {
     .column {
-        // This is because semantic-ui's grid sets the margin using `!important`.
+        /* This is because semantic-ui's grid sets the margin using
+         `!important`. */
         margin-top  : 0 !important;
         padding-top : 0 !important;
     }
