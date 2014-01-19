@@ -6,6 +6,7 @@ Handlebars.registerHelper("unescape",  (html) ->
 )
 Handlebars.registerHelper("ago", (time) -> moment(time).fromNow())
 Handlebars.registerHelper("toISO", (date) -> date.toISOString())
+Handlebars.registerHelper("equals", (a, b) -> a == b)
 
 
 

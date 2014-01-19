@@ -50,8 +50,8 @@
             </div>
 
             {{#each enumTranslations}}
-              {{#if $last}}
-                <div class="ui bottom attached dst message-box segment">
+              {{#if equals $index 1}}
+                <div class="ui attached bottom dst message-box segment">
                   {{>message}}
                 </div>
               {{else}}
@@ -60,6 +60,15 @@
                 </div>
               {{/if}}
             {{/each}}
+
+            {{#unless equals translations.length 2}}
+              <div class="ui bottom attached dst message-box segment">
+                <p>Translating ...</p>
+                <div class="ui active inverted dimmer">
+                  <div class="ui mini loader"></div>
+                </div>
+              </div>
+            {{/unless}}
         </div>
       </li>
     {{/each}}
@@ -67,16 +76,10 @@
 </template>
 
 <template name="message">
-  {{#if text}}
-    <p class="message">
-      {{unescape text}}
-      {{>msgInfo}}
-    </p>
-  {{else}}
-      <div class="ui active inverted dimmer">
-        <div class="ui mini text loader">Translating ...</div>
-      </div>
-  {{/if}}
+  <p class="message">
+    {{unescape text}}
+    {{>msgInfo}}
+  </p>
 </template>
 
 <template name="msgInfo">
