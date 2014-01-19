@@ -49,7 +49,7 @@
               {{>message original}}
             </div>
 
-            {{#foreach translations}}
+            {{#each enumTranslations}}
               {{#if $last}}
                 <div class="ui bottom attached dst message-box segment">
                   {{>message}}
@@ -59,7 +59,7 @@
                   {{>message}}
                 </div>
               {{/if}}
-            {{/foreach}}
+            {{/each}}
         </div>
       </li>
     {{/each}}

@@ -45,6 +45,21 @@ Template.showMessages.helpers({
                 pendingMessagesNotification.show()
         })
         cursor
+
+    enumTranslations: ->
+        arr = @translations
+        arr.map((item,index) ->
+            # Adding an `_id` to handle this issue:
+            # https://github.com/meteor/meteor/issues/281
+            _.extend({},
+                {
+                    '$index' : index
+                    '$first' : index == 0
+                    '$last'  : index == arr.length - 1
+                },
+                item
+            )
+        )
 })
 
 Template.postMessage.events(
