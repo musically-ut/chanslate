@@ -18,7 +18,7 @@ createMessage = (lang, text, createdBy, error) ->
     }
 
 
-translateUsingGoogle = (text, source, target) ->
+translateUsingGoogle = (text, source, target, cb) ->
     check(text   , String)
     check(source , String)
     check(target , String)
@@ -26,7 +26,7 @@ translateUsingGoogle = (text, source, target) ->
     console.log('Translating using Google ... ')
 
     if Meteor.settings.GOOGLE_TRANSLATE_API?
-        res = HTTP.call(
+        HTTP.call(
             "POST",
             googla_url,
             {
@@ -38,17 +38,28 @@ translateUsingGoogle = (text, source, target) ->
                     q      : text
                 headers:
                     'X-HTTP-Method-Override': 'GET'
-            }
+            },
+            (err, res) ->
+                translatedMsg = 'Google translation failed.'
+                if not err
+                    console.log('Google translate API response:')
+                    console.log(JSON.stringify(res, null, 2))
+                    try
+                        translatedMsg = res.data.data
+                                           .translations[0].translatedText
+                    catch exept
+                        console.error(
+                            'Google translation failed with exception:',
+                            except
+                        )
+
+                cb(err, translatedMsg)
         )
-
-        console.log('Google translate API response:')
-        console.log(JSON.stringify(res, null, 2))
-        res.data.data.translations[0].translatedText
     else
-        console.error('Proper settings not provided!')
-        'No translate from Google available'
+        console.error('Proper settings for Google API not provided!')
+        cb(null, 'No translation from Google available')
 
-translateUsingBing = (text, source, target) ->
+translateUsingBing = (text, source, target, cb) ->
 
     check(text   , String)
     check(source , String)
@@ -58,7 +69,7 @@ translateUsingBing = (text, source, target) ->
 
     if @BingAccessTokenManager?
         token = BingAccessTokenManager.getToken()
-        res = HTTP.call(
+        HTTP.call(
             "GET",
             bing_url,
             {
@@ -71,62 +82,71 @@ translateUsingBing = (text, source, target) ->
 
                 headers:
                     'Authorization': 'Bearer ' + token
-            }
+            },
+            (err, res) ->
+                translatedMsg = 'Bing translation failed.'
+                if not err
+                    console.log('Bing translate API response:')
+                    console.log(JSON.stringify(res, null, 2))
+
+                    # Data format:
+                    #  {
+                    #  ...
+                    #  "content":
+                    #  '<string xmlns=
+                    #     "http://schemas.microsoft.com/2003/10/Serialization/">
+                    #      Versuch das mal.
+                    #  </string>'
+                    #  }
+                    try
+                        content = (new xmldom.DOMParser())
+                                        .parseFromString(res.content)
+                        translatedMsg = content.firstChild.firstChild.data
+                    catch except
+                        console.error(
+                            'Bing translation failed with exception:',
+                            except
+                        )
+
+                cb(err, translatedMsg)
         )
-
-        console.log('Bing translate API response:')
-        console.log(JSON.stringify(res, null, 2))
-
-        # Data format:
-        #  {
-        #  ...
-        #  "content":
-        #  '<string xmlns=
-        #      "http://schemas.microsoft.com/2003/10/Serialization/">
-        #      Versuch das mal.
-        #  </string>'
-        #  }
-        content = (new xmldom.DOMParser()).parseFromString(res.content)
-        content.firstChild.firstChild.data
     else
         console.error('Could not locate BingAccessTokenManager')
-        'No translate from Bing available'
+        cb(null, 'No translation from Bing available')
+
 
 _tryTranslation = (methodFunc, methodName, msg, sourceLang, targetLang, _id) ->
-    modifier = {}
-
-    try
-        translatedMsg = methodFunc(msg, sourceLang, targetLang)
-        modifier.translations =
-            createMessage(targetLang , translatedMsg, methodName, false)
+    cb = (error, translatedMsg) ->
+        modifier = {}
+        if not error
+            modifier.translations =
+                createMessage(
+                    targetLang,
+                    translatedMsg,
+                    methodName,
+                    false
+                )
+        else
+            console.error('Could not translate: ', error)
+            modifier.translations =
+                createMessage(
+                    targetLang,
+                    'Could not translate.',
+                    methodName,
+                    true
+                )
 
         ChanslateMessages.update({ _id: _id }, {
             $push: modifier
         })
 
-    catch error
-        console.error('Could not translate: ', error)
-        modifier.translations =
-            createMessage(
-                targetLang,
-                'Could not translate.',
-                methodName,
-                true
-            )
-
-        ChanslateMessages.update({ _id: _id }, {
-            $push: modifier
-        })
-
-
+    methodFunc(msg, sourceLang, targetLang, cb)
 
 ################################################################
 ### Exported methods and values
 ################################################################
 
 @translateAndPopulate = (msg, sourceLang, targetLang, _id) ->
-    # TODO (UU): These calls should be made in parallel
-    # But doing that for some reason blows the stack.
     _tryTranslation(
         translateUsingGoogle,
         'google',
@@ -144,32 +164,6 @@ _tryTranslation = (methodFunc, methodName, msg, sourceLang, targetLang, _id) ->
         targetLang,
         _id
     )
-
-    # setTimeout(
-    #     () -> _tryTranslation(
-    #         translateUsingGoogle,
-    #         'google',
-    #         msg,
-    #         sourceLang,
-    #         targetLang,
-    #         _id
-    #     ),
-    #     0
-    # )
-
-    # setTimeout(
-    #     () -> _tryTranslation(
-    #         translateUsingBing,
-    #         'bing',
-    #         msg,
-    #         sourceLang,
-    #         targetLang,
-    #         _id
-    #     ),
-    #     0
-    # )
-
-
 
 @createChanslateMsgDoc = (userName, origMsg, origLang) ->
     {
