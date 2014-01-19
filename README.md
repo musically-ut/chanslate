@@ -4,18 +4,12 @@ This is the Chanslate app.
 
 To install all the necessary dependencies:
 
-    meteor add http coffeescript less moment collection2
+    meteor add http coffeescript less
 
-    # Semantic UI
+    # Atmosphere packages.
     mrt add semantic-ui-less
-
-    # Make Semantic UI assets public
-    cp -r packages/semantic-ui-less/lib/semantic-ui/build/uncompressed/fonts public/
-    cp -r packages/semantic-ui-less/lib/semantic-ui/build/uncompressed/images/ public/
-
-    # Remove the unnecessary packages
-    meteor remove insecure
-    meteor remove autopublish
+    mrt add moment
+    mrt add collection2
 
 ## Running
 
