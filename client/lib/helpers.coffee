@@ -38,18 +38,6 @@ Handlebars.registerHelper('colorize', -> colorHandle(this["userName"]))
     100
 )
 
-Handlebars.registerHelper("foreach", (arr,options) ->
-    if (options.inverse && !arr.length)
-        return options.inverse(this)
-
-    arr.map((item,index) ->
-        item.$index = index
-        item.$first = index == 0
-        item.$last  = index == arr.length-1
-        options.fn(item)
-    ).join('')
-)
-
 # thanks random SO answer.
 # https://github.com/Pent/chatworks/blob/47953dc2ca1087753943c63fb4d2d3ec59befcb2/server/server.js
 @haiku = ->
