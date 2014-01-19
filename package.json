@@ -1,7 +1,0 @@
-{
-    "name": "chanslate",
-    "version": "0.0.1",
-    "dependencies": {
-        "xmldom": "0.1.18"
-    }
-}

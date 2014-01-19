@@ -1,4 +1,4 @@
-xmldom = Npm.require('xmldom')
+xmldom = Meteor.require('xmldom')
 xmlSerializer = (new xmldom.XMLSerializer()).serializeToString
 
 googla_url = 'https://www.googleapis.com/language/translate/v2'

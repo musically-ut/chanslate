@@ -10,15 +10,17 @@ To install all the necessary dependencies:
     mrt add semantic-ui-less
     mrt add moment
     mrt add collection2
+    mrt add npm
 
 ## Running
 
     meteor run --settings settings.json
 
 The settings.json should be of the form:
-
     {
-        "GOOGLE_TRANSLATE_API": "insert-API-key-here"
+        "GOOGLE_TRANSLATE_API"         : "your_api_key"
+      , "BING_TRANSLATE_CLIENT_SECRET" : "your_client_secret"
+      , "BING_TRANSLATE_CLIENT_ID"     : "your_client_id"
     }
 
 
@@ -31,4 +33,6 @@ See note above in **Running** section for `settings.json`.
 
 ## Credits
 
-This work draws heavily (in code as well as spirit) from [ChatWorks](http://chatworks.in/). Check out [their github page too.](https://github.com/Pent/chatworks).
+This work draws heavily (in code as well as spirit) from
+[ChatWorks](http://chatworks.in/). Check out [their github page
+too](https://github.com/Pent/chatworks).
