@@ -39,10 +39,15 @@ Template.requestNotificationPermission.events(
 Template.showMessages.helpers({
     messages: ->
         cursor = ChanslateMessages.find({}, {sort: { at: 1 }})
-        cursor.observe({ added: ->
-            scrollToBottom()
-            if not isInputFocussed and Session.get('haveNotificationPermission')
-                pendingMessagesNotification.show()
+        cursor.observe({
+            # Avoids scrolling to the bottom immediately after site loads and
+            # the associated notifications.
+            _suppress_initial: true
+            added: ->
+                scrollToBottom()
+                havePermission = Session.get('haveNotificationPermission')
+                if not isInputFocussed and havePermission
+                    pendingMessagesNotification.show()
         })
         cursor
 
