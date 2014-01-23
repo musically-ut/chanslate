@@ -17,6 +17,7 @@ To install all the necessary dependencies:
     meteor run --settings settings.json
 
 The settings.json should be of the form:
+
     {
         "GOOGLE_TRANSLATE_API"         : "your_api_key"
       , "BING_TRANSLATE_CLIENT_SECRET" : "your_client_secret"
