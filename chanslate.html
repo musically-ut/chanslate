@@ -51,7 +51,7 @@
             </div>
 
             {{#each enumTranslations}}
-              {{#if equals $index 1}}
+              {{#if equals $indexBaseOne engines.length}}
                 <div class="ui attached bottom dst message-box segment">
                   {{>message}}
                 </div>
@@ -62,7 +62,7 @@
               {{/if}}
             {{/each}}
 
-            {{#unless equals translations.length 2}}
+            {{#unless equals translations.length engines.length}}
               <div class="ui bottom attached dst message-box segment">
                 <p>Translating ...</p>
                 <div class="ui active inverted dimmer">
@@ -91,6 +91,29 @@
   <div class="ui horizontal icon divider">
     <i class="circular icon pencil"></i>
   </div>
+  <form class="ui two stackable column grid choose-engine">
+    <div class="column ui form">
+      <span class="field ui checkbox toggle">
+        <input id   = "google-engine-selector"
+               type = "checkbox"
+               name = "google"
+               {{googleChecked}} />
+        <label for="google-engine-selector">Google Translator</label>
+      </span>
+    </div>
+
+    <div class="column ui form">
+      <span class="field ui checkbox toggle">
+        <input id   = "bing-engine-selector"
+               type = "checkbox"
+               name = "bing"
+               {{bingChecked}} />
+        <label for="bing-engine-selector">Bing Translator</label>
+      </span>
+    </div>
+
+  </form>
+
   <form class="ui two stackable column grid post-message">
     <div class="column ui form">
       <span class="field">

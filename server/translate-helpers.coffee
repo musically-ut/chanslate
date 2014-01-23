@@ -142,41 +142,53 @@ _tryTranslation = (methodFunc, methodName, msg, sourceLang, targetLang, _id) ->
 
     methodFunc(msg, sourceLang, targetLang, cb)
 
+truncMessage = (msg, limit) -> msg.substr(0, limit)
+
 ################################################################
 ### Exported methods and values
 ################################################################
 
-@translateAndPopulate = (msg, sourceLang, targetLang, _id) ->
-    _tryTranslation(
-        translateUsingGoogle,
-        'google',
-        msg,
-        sourceLang,
-        targetLang,
-        _id
-    )
+@google = 'google'
+@bing   = 'bing'
 
-    _tryTranslation(
-        translateUsingBing,
-        'bing',
-        msg,
-        sourceLang,
-        targetLang,
-        _id
-    )
+@translateAndPopulate = (msg, sourceLang, targetLang, engines, _id) ->
+    if google in engines
+        _tryTranslation(
+            translateUsingGoogle,
+            google,
+            msg,
+            sourceLang,
+            targetLang,
+            _id
+        )
 
-@createChanslateMsgDoc = (userName, origMsg, origLang) ->
+    if bing in engines
+        _tryTranslation(
+            translateUsingBing,
+            bing,
+            msg,
+            sourceLang,
+            targetLang,
+            _id
+        )
+
+@createChanslateMsgDoc = (uName, msg, lang, engines, lastAt) ->
+    check(uName    , String)
+    check(msg      , String)
+    check(lang     , String)
+    check(engines  , [String])
+    check(lastAt   , Date)
+
+    msg = truncMessage(msg)
+
     {
-        userName     : userName
-        at           : new Date()
-        original     : createMessage(origLang, origMsg, userName, false)
+        original     : createMessage(lang, msg, uName, false)
         translations : []
+        engines      : engines
+
+        userName     : uName
+        at           : new Date()
+        lastAt       : lastAt
     }
 
-@checkTranslationParams = (userName, msg) ->
-    check(userName , String)
-    check(msg      , String)
-
-
-@truncMessage = (msg, limit) -> msg.substr(0, limit)
 

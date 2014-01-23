@@ -1,39 +1,24 @@
 Meteor.subscribe('chanslateMessages')
 Session.set('userName', haiku())
+Session.set('engines', [ 'google', 'bing' ])
 
 isInputFocussed = false
 
-pendingMessagesNotification = new Notify('Messages', {
-    body: 'On Chanslate',
-    permissionGranted: ->
-        Session.set('haveNotificationPermission', true)
-        Session.set('notificationPermissionsNeeded', false)
+Meteor.startup ->
+    setUpNotification(getLastMessageTime())
 
-    permissionDenied: ->
-        Session.set('haveNotificationPermission', false)
-        Session.set('notificationPermissionsNeeded', false)
-})
-
-Session.set(
-    'notificationPermissionsNeeded',
-    pendingMessagesNotification.isSupported() and
-    pendingMessagesNotification.needsPermission()
-)
-
-Session.set(
-    'haveNotificationPermission',
-    not pendingMessagesNotification.needsPermission()
-)
-
-
-Template.requestNotificationPermission.needsPermissionAndSupported = ->
-    Session.get('notificationPermissionsNeeded')
+Template
+    .requestNotificationPermission
+    .needsPermissionAndSupported = ->
+        Session.get('notificationPermissionsNeeded')
 
 Template.requestNotificationPermission.events(
     'click #request-notification-permission': (ev, template) ->
-        pendingMessagesNotification.requestPermission()
+        body = Session.get('pendingMessagesNotificationBody')
+        Session.set('notificationPermissionsNeeded', false)
+        Session.set('haveNotificationPermission', true)
+        makeNotification(body).requestPermission()
 )
-
 
 # Template helpers
 Template.showMessages.helpers({
@@ -47,32 +32,59 @@ Template.showMessages.helpers({
                 scrollToBottom()
                 havePermission = Session.get('haveNotificationPermission')
                 if not isInputFocussed and havePermission
-                    pendingMessagesNotification.show()
+                    body = Session.get('pendingMessagesNotificationBody')
+                    makeNotification(body).show()
         })
         cursor
 
     enumTranslations: ->
         arr = @translations
         arr.map((item,index) ->
-            # Adding an `_id` to handle this issue:
-            # https://github.com/meteor/meteor/issues/281
             _.extend({},
                 {
-                    '$index' : index
-                    '$first' : index == 0
-                    '$last'  : index == arr.length - 1
+                    '$index'        : index
+                    '$indexBaseOne' : index + 1
+                    '$first'        : index == 0
+                    '$last'         : index == arr.length - 1
                 },
                 item
             )
         )
 })
 
+
+toggleEngine = (engineName) ->
+    engines = Session.get('engines')
+    if engineName in engines
+        engines.splice(engines.indexOf(engineName), 1)
+    else
+        engines.push(engineName)
+    Session.set('engines', engines)
+
+
+Template.postMessage.bingChecked = ->
+    if 'bing' in Session.get('engines') then 'checked' else ''
+
+Template.postMessage.googleChecked =  ->
+    if 'google' in Session.get('engines') then 'checked' else ''
+
 Template.postMessage.events(
     'focus input': (ev, template) ->
         isInputFocussed = true
 
     'blur input': (ev, template) ->
+        Session.set(
+            'pendingMessagesNotificationBody',
+            createNotificationBody(getLastMessageTime())
+        )
         isInputFocussed = false
+
+    'click input[name="google"]':  ->
+        toggleEngine('google')
+
+    'click input[name="bing"]': ->
+        toggleEngine('bing')
+
 
     'keyup input[name="src"]': (ev, template) ->
         if ev.which == 13
@@ -84,7 +96,8 @@ Template.postMessage.events(
                 Meteor.call(
                     'addSrcMessage',
                     Session.get('userName'),
-                    text
+                    text,
+                    Session.get('engines')
                 )
 
             textBox.value = ''
@@ -100,7 +113,8 @@ Template.postMessage.events(
                 Meteor.call(
                     'addDstMessage',
                     Session.get('userName'),
-                    text
+                    text,
+                    Session.get('engines')
                 )
 
             textBox.value = ''

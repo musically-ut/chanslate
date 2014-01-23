@@ -17,11 +17,16 @@ MessageSchema = new SimpleSchema({
                 type: MessageSchema
             translations:
                 type: [MessageSchema]
+            engines:
+                type: [String]
 
             userName:
                 type: String
             at:
                 type: Date
+            lastAt:
+                type: Date
+                optional: true
     }
 )
 
