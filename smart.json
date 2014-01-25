@@ -2,6 +2,7 @@
   "packages": {
     "collection2": {},
     "semantic-ui-less": {},
-    "npm": {}
+    "npm": {},
+    "moment": {}
   }
 }
