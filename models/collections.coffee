@@ -9,6 +9,13 @@ MessageSchema = new SimpleSchema({
         type: Boolean
 })
 
+UserSummary = new SimpleSchema({
+    id:
+        type: String
+    name:
+        type: String
+})
+
 @ChanslateMessages = new Meteor.Collection2(
     'chanslateMessages',
     {
@@ -20,7 +27,9 @@ MessageSchema = new SimpleSchema({
             engines:
                 type: [String]
 
-            userName:
+            userId:
+                type: String
+            roomId:
                 type: String
             at:
                 type: Date
@@ -30,8 +39,43 @@ MessageSchema = new SimpleSchema({
     }
 )
 
+
 ChanslateMessages.allow({
     insert: false
     update: false
     remove: false
 })
+
+
+@ChanslateRooms = new Meteor.Collection2(
+    'chanslateRooms',
+    {
+        schema:
+            name:
+                type: String
+            secret:
+                type: String
+
+            users:
+                type: [UserSummary]
+            createdAt:
+                type: Date
+            engines:
+                type: [String]
+            createdByUserId:
+                type: String
+            srcLang:
+                type: String
+            dstLang:
+                type: String
+    }
+)
+
+ChanslateRooms.allow({
+    # TODO (UU): Totally unsafe
+    insert: -> true
+    update: false
+    remove: false
+})
+
+# The Users table is automatically created

@@ -10,30 +10,33 @@ dstLang = 'de'
 
 Meteor.startup ->
     Meteor.methods(
-        addSrcMessage: (userName, msg, engines) ->
-            console.log('Adding src message:', msg, ' ~ ', userName)
+        addSrcMessage: (userId, roomId, msg, engines) ->
+            console.log('Adding src message:', msg, ' ~ ', userId)
 
-            if not this.isSimulation
-                this.unblock()
+            if not @isSimulation
+                @unblock()
                 _id = ChanslateMessages.insert(
                     createChanslateMsgDoc(
-                        userName,
+                        userId,
+                        roomId,
                         msg,
                         srcLang,
                         engines,
                         getLastMessageTime()
                     )
                 )
+                console.log('inserted message _id: ', _id)
                 translateAndPopulate(msg, srcLang, dstLang, engines, _id)
 
-        addDstMessage: (userName, msg, engines) ->
-            console.log('Adding dst message:', msg, ' ~ ', userName)
+        addDstMessage: (userId, roomId, msg, engines) ->
+            console.log('Adding dst message:', msg, ' ~ ', userId)
 
-            if not this.isSimulation
-                this.unblock()
+            if not @isSimulation
+                @unblock()
                 _id = ChanslateMessages.insert(
                     createChanslateMsgDoc(
-                        userName,
+                        userId,
+                        roomId,
                         msg,
                         dstLang,
                         engines,

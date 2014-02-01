@@ -1,0 +1,10 @@
+<template name="rooms">
+  <ul>
+    {{#each rooms}}
+      <li>
+        <a href="{{ pathFor 'room' }}">{{name}}</a>
+      </li>
+    {{/each}}
+  </ul>
+  <button id="create-room" class="ui button primary">Create Room</button>
+</template>

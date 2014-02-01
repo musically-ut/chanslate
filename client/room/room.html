@@ -1,32 +1,20 @@
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="google" content="notranslate" />
-  <meta name="viewport" content="width=device-width">
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans|Ubuntu:500' rel='stylesheet' type='text/css'>
-  <title>Chanslate</title>
-</head>
+<template name="room">
+  {{>backButton}}
+  {{>showMessages}}
+  {{>requestNotificationPermission}}
+  {{>postMessage}}
+</template>
 
-<body>
-  <div id="container">
-    <div class="ui sixteen wide column">
-      <h1 class="ui header banner">Chanslate</h1>
-    </div>
+<template name="roomNotFound">
+  {{>backButton}}
+  <p>Sorry, the room you tried to access is either not available or doesn't
+  exist.</p>
+</template>
 
-    <div id="chanslate-content">
-      {{>showMessages}}
-      {{>requestNotificationPermission}}
-      {{>postMessage}}
-    </div>
-  </div>
-</body>
-
-<template name="requestNotificationPermission">
-  {{#if needsPermissionAndSupported}}
-    <p>
-      Click <button id="request-notification-permission" class="ui mini teal button">here</button>
-      to allow notifications.
-    </p>
-  {{/if}}
+<template name="backButton">
+  <a href="{{pathFor 'rooms'}}" class="ui mini button">
+    Back
+  </a>
 </template>
 
 <template name="showMessages">
@@ -35,7 +23,7 @@
       <li class="ui">
         <div class="msg-info">
           <span class="user-name" style="color:{{#colorize}}{{/colorize}}">
-            {{userName}}
+            {{loggedInUserName}}
           </span>
 
           <span class="ui small label time">
@@ -128,6 +116,15 @@
       </span>
     </div>
   </form>
+</template>
+
+<template name="requestNotificationPermission">
+  {{#if needsPermissionAndSupported}}
+    <p>
+      Click <button id="request-notification-permission" class="ui mini teal button">here</button>
+      to allow notifications.
+    </p>
+  {{/if}}
 </template>
 
 

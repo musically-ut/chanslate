@@ -1,122 +1,83 @@
-Meteor.subscribe('chanslateMessages')
-Session.set('userName', haiku())
-Session.set('engines', [ 'google', 'bing' ])
-
-isInputFocussed = false
-
 Meteor.startup ->
-    setUpNotification(getLastMessageTime())
 
-Template
-    .requestNotificationPermission
-    .needsPermissionAndSupported = ->
-        Session.get('notificationPermissionsNeeded')
+    ##################
+    # Accounts
+    ##################
+    Accounts.ui.config({
+        passwordSignupFields: 'USERNAME_ONLY'
+    })
 
-Template.requestNotificationPermission.events(
-    'click #request-notification-permission': (ev, template) ->
-        body = Session.get('pendingMessagesNotificationBody')
-        Session.set('notificationPermissionsNeeded', false)
-        Session.set('haveNotificationPermission', true)
-        makeNotification(body).requestPermission()
-)
+    ##################
+    # Routing
+    ##################
 
-# Template helpers
-Template.showMessages.helpers({
-    messages: ->
-        cursor = ChanslateMessages.find({}, {sort: { at: 1 }})
-        cursor.observe({
-            # Avoids scrolling to the bottom immediately after site loads and
-            # the associated notifications.
-            _suppress_initial: true
-            added: ->
-                scrollToBottom()
-                havePermission = Session.get('haveNotificationPermission')
-                if not isInputFocussed and havePermission
-                    body = Session.get('pendingMessagesNotificationBody')
-                    makeNotification(body).show()
+    # To provide our own template instead of appending route templates to body
+    Router.configure(
+        autoRender: false
+    )
+
+    # If the user is not signed in, render the signin template instead of the
+    # actual page. However, keep the URL the same.
+    mustBeSignedIn = ->
+        if not Meteor.user()?
+            @render('signIn')
+            @stop()
+
+    Router.before(mustBeSignedIn, {
+        except: [ 'signIn' ]
+    })
+
+    Router.map( ->
+
+        # This is the default path, redirects to `/rooms` after logging in
+        @route('signIn', {
+            path: '/'
+            before: ->
+                # If user is logged in, take him to list of rooms
+                if Meteor.user()?
+                    this.stop()
+                    Router.go('rooms')
         })
-        cursor
-
-    enumTranslations: ->
-        arr = @translations
-        arr.map((item,index) ->
-            _.extend({},
-                {
-                    '$index'        : index
-                    '$indexBaseOne' : index + 1
-                    '$first'        : index == 0
-                    '$last'         : index == arr.length - 1
-                },
-                item
-            )
-        )
-})
 
 
-toggleEngine = (engineName) ->
-    engines = Session.get('engines')
-    if engineName in engines
-        engines.splice(engines.indexOf(engineName), 1)
-    else
-        engines.push(engineName)
-    Session.set('engines', engines)
+        # The list of all rooms
+        @route('rooms', {
+            path: '/rooms'
+            waitOn: ->
+                Meteor.subscribe('chanslateRooms')
+            data:
+                rooms: ChanslateRooms.find({})
+        })
 
-
-Template.postMessage.bingChecked = ->
-    if 'bing' in Session.get('engines') then 'checked' else ''
-
-Template.postMessage.googleChecked =  ->
-    if 'google' in Session.get('engines') then 'checked' else ''
-
-Template.postMessage.events(
-    'focus input': (ev, template) ->
-        isInputFocussed = true
-
-    'blur input': (ev, template) ->
-        Session.set(
-            'pendingMessagesNotificationBody',
-            createNotificationBody(getLastMessageTime())
-        )
-        isInputFocussed = false
-
-    'click input[name="google"]':  ->
-        toggleEngine('google')
-
-    'click input[name="bing"]': ->
-        toggleEngine('bing')
-
-
-    'keyup input[name="src"]': (ev, template) ->
-        if ev.which == 13
-            console.log('Handling source message')
-            textBox = template.find('[name="src"]')
-            text = textBox.value
-
-            if text.length > 0
-                Meteor.call(
-                    'addSrcMessage',
-                    Session.get('userName'),
-                    text,
-                    Session.get('engines')
+        # Showing one particular chat room
+        @route('room', {
+            path: '/room/:_id'
+            notFoundTemplate: 'roomNotFound'
+            waitOn: ->
+                # This causes both `room` and `messages` to be loaded before
+                # proceeding with the rendering of the template
+                Meteor.subscribe(
+                    'chanslateRoomAndMessages',
+                    @params._id
                 )
 
-            textBox.value = ''
-            textBox.focus()
+            data: ->
+                # TODO (UU): Add a `secret` query parameter to allow users to
+                # be added to chat-rooms
+                room = ChanslateRooms.findOne({ _id: @params._id })
+                Session.set('currentRoom', room)
+                Session.set('engines', room.engines)
 
-    'keyup input[name="dst"]': (ev, template) ->
-        if ev.which == 13
-            console.log('Handling dst message')
-            textBox = template.find('[name="dst"]')
-            text = textBox.value
-
-            if text.length > 0
-                Meteor.call(
-                    'addDstMessage',
-                    Session.get('userName'),
-                    text,
-                    Session.get('engines')
-                )
-
-            textBox.value = ''
-            textBox.focus()
-)
+                # If the room was a valid one, show it.
+                # The user cannot distinguish between non-existent and
+                # inaccessible chat rooms
+                if room?
+                    {
+                        messages: ChanslateMessages.find({
+                            roomId: @params._id
+                        })
+                    }
+                else
+                    null
+        })
+    )

@@ -13,6 +13,7 @@ less
 collection2
 semantic-ui-less
 moment
-accounts-google
 accounts-ui
 npm
+accounts-password
+iron-router

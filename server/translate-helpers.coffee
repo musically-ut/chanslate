@@ -172,8 +172,9 @@ truncMessage = (msg, limit) -> msg.substr(0, limit)
             _id
         )
 
-@createChanslateMsgDoc = (uName, msg, lang, engines, lastAt) ->
-    check(uName    , String)
+@createChanslateMsgDoc = (uId, roomId, msg, lang, engines, lastAt) ->
+    check(uId      , String)
+    check(roomId   , String)
     check(msg      , String)
     check(lang     , String)
     check(engines  , [String])
@@ -182,11 +183,12 @@ truncMessage = (msg, limit) -> msg.substr(0, limit)
     msg = truncMessage(msg)
 
     {
-        original     : createMessage(lang, msg, uName, false)
+        original     : createMessage(lang, msg, uId, false)
         translations : []
         engines      : engines
 
-        userName     : uName
+        userId       : uId
+        roomId       : roomId
         at           : new Date()
         lastAt       : lastAt
     }

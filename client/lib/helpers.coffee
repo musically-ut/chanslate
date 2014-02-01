@@ -7,10 +7,9 @@ Handlebars.registerHelper("unescape",  (html) ->
 Handlebars.registerHelper("ago", (time) -> moment(time).fromNow())
 Handlebars.registerHelper("toISO", (date) -> date.toISOString())
 Handlebars.registerHelper("equals", (a, b) -> a == b)
+Handlebars.registerHelper("loggedInUserName", -> Meteor.user().username)
 
-
-
-# Hack to get time to update every 30 seconds.
+# Hack (?) to get time to update every 30 seconds.
 updateTime = -> $('time.message-time').each((idx, elem) ->
     $elem = $(elem)
     msgTime = $elem.attr('datetime')
@@ -29,7 +28,7 @@ colorHandle = (handle) ->
     hue = sumi % 360
     'hsl('+hue+',46%,75%)'
 
-Handlebars.registerHelper('colorize', -> colorHandle(this["userName"]))
+Handlebars.registerHelper('colorize', -> colorHandle(this["userId"]))
 
 @scrollToBottom = _.debounce(
     ->
