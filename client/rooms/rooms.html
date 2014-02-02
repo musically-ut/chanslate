@@ -1,10 +1,93 @@
 <template name="rooms">
-  <ul>
+  {{#unless showCreateRoomForm}}
+    <button id="add-room" class="ui button fluid small secondary">
+      <i class="icon add sign"></i>Add Room
+    </button>
+  {{else}}
+    <form id="new-room-form" class="ui small form fluid segment">
+      <div class="two fields">
+        <div class="field {{roomNameInError}}">
+          <label>Room Name</label>
+          <input name        = "room-name"
+                 class       = "required"
+                 type        = "text"
+                 value       = ""
+                 placeholder = "Room name" />
+        </div>
+
+        <div class="disabled field {{roomSecretInError}}">
+          <label>Room Secret</label>
+          <!-- May make this editable later -->
+          <input name        = "room-secret"
+                 type        = "text"
+                 value       = "{{getNewRoomSecret}}"
+                 disabled />
+        </div>
+      </div>
+
+      <div class="two fields">
+        <div class="field {{srcLangInError}}">
+          <label>Source language (code)</label>
+          <input name        = "src-lang"
+                 type        = "text"
+                 value       = "en"
+                 placeholder = "Source language code">
+        </div>
+
+        <div class="field {{dstLangInError}}">
+          <label>Destination language (code)</label>
+          <input name        = "dst-lang"
+                 type        = "text"
+                 value       = "de"
+                 placeholder = "Destination language code">
+        </div>
+      </div>
+
+      <div class="field ui buttons floated right">
+        <button id    = "cancel-add-room"
+                type  = "button"
+                class = "ui right button">
+          Cancel
+        </button>
+
+        <div class="or"></div>
+
+        <button id    = "create-room"
+                type  = "submit"
+                class = "ui right positive button">
+          Create
+        </button>
+      </div>
+    </form>
+  {{/unless}}
+
+  <div class="ui list">
     {{#each rooms}}
-      <li>
-        <a href="{{ pathFor 'room' }}">{{name}}</a>
-      </li>
+      <div class="item">
+        <i class="chat icon"></i>
+        <div class="content">
+          <div class="header">
+            <a class="link" href="{{ pathFor 'room' }}">{{name}}</a>
+          </div>
+          <div class="description ui horizontal list">
+            <div class="item">
+              <label class="ui label">
+                <i class="icon time"></i>
+                <time class="js-auto-update" datetime="{{toISO createdAt}}">
+                  {{ago createdAt}}
+                </time>
+              </label>
+            </div>
+            <div class="item">
+              <label class="ui label">
+                <i class="icon users"></i>
+                {{count users}}
+              </label>
+            </div>
+            <div class="item">~ {{username createdByUserId}}</div>
+          </div>
+        </div>
+      </div>
     {{/each}}
-  </ul>
-  <button id="create-room" class="ui button primary">Create Room</button>
+  </div>
 </template>

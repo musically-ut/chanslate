@@ -24,7 +24,6 @@ isSupported = 'Notification' in this
         pendingMessagesNotificationBody
     )
 
-
     pendingMessagesNotification =
         makeNotification(pendingMessagesNotificationBody)
 
@@ -38,6 +37,4 @@ isSupported = 'Notification' in this
         'haveNotificationPermission',
         not pendingMessagesNotification.needsPermission()
     )
-
-
 

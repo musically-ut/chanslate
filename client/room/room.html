@@ -13,7 +13,7 @@
 
 <template name="backButton">
   <a href="{{pathFor 'rooms'}}" class="ui mini button">
-    Back
+    <i class="icon left"></i>All rooms
   </a>
 </template>
 
@@ -23,11 +23,12 @@
       <li class="ui">
         <div class="msg-info">
           <span class="user-name" style="color:{{#colorize}}{{/colorize}}">
-            {{loggedInUserName}}
+            {{username userId}}
           </span>
 
           <span class="ui small label time">
-            <time class="message-time" datetime="{{toISO at}}">
+            <i class="icon time"></i>
+            <time class="js-auto-update" datetime="{{toISO at}}">
               {{ago at}}
             </time>
           </span>

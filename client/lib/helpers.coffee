@@ -7,10 +7,14 @@ Handlebars.registerHelper("unescape",  (html) ->
 Handlebars.registerHelper("ago", (time) -> moment(time).fromNow())
 Handlebars.registerHelper("toISO", (date) -> date.toISOString())
 Handlebars.registerHelper("equals", (a, b) -> a == b)
-Handlebars.registerHelper("loggedInUserName", -> Meteor.user().username)
+Handlebars.registerHelper('count', (arr) -> if arr? then arr.length else 0)
+Handlebars.registerHelper("username", (userId) ->
+    user = Meteor.users.findOne({ _id: userId })
+    if user? then user.username else ('No userId: ' + userId)
+)
 
 # Hack (?) to get time to update every 30 seconds.
-updateTime = -> $('time.message-time').each((idx, elem) ->
+updateTime = -> $('time.js-auto-update').each((idx, elem) ->
     $elem = $(elem)
     msgTime = $elem.attr('datetime')
     $elem.text(moment(msgTime).fromNow())

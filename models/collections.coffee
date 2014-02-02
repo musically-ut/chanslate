@@ -72,8 +72,7 @@ ChanslateMessages.allow({
 )
 
 ChanslateRooms.allow({
-    # TODO (UU): Totally unsafe
-    insert: -> true
+    insert: false
     update: false
     remove: false
 })
