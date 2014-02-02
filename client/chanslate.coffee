@@ -1,5 +1,10 @@
 Meteor.startup ->
 
+    #################
+    # "Friends"
+    #################
+    Meteor.subscribe('chanslateUsers')
+
     ##################
     # Accounts
     ##################
@@ -20,7 +25,7 @@ Meteor.startup ->
     # actual page. However, keep the URL the same.
     mustBeSignedIn = ->
         if not Meteor.user()?
-            @render('signIn')
+            @render(if Meteor.loggingIn() then 'signingIn' else 'signIn')
             @stop()
 
     Router.before(mustBeSignedIn, {
@@ -35,7 +40,7 @@ Meteor.startup ->
             before: ->
                 # If user is logged in, take him to list of rooms
                 if Meteor.user()?
-                    this.stop()
+                    @stop()
                     Router.go('rooms')
         })
 
@@ -49,10 +54,9 @@ Meteor.startup ->
                 rooms: ChanslateRooms.find({})
         })
 
-        # Showing one particular chat room
+        # Showing one particular chat room, or allowing access to one.
         @route('room', {
             path: '/room/:_id'
-            notFoundTemplate: 'roomNotFound'
             waitOn: ->
                 # This causes both `room` and `messages` to be loaded before
                 # proceeding with the rendering of the template
@@ -62,22 +66,56 @@ Meteor.startup ->
                 )
 
             data: ->
-                # TODO (UU): Add a `secret` query parameter to allow users to
-                # be added to chat-rooms
                 room = ChanslateRooms.findOne({ _id: @params._id })
-                Session.set('currentRoom', room)
-                Session.set('engines', room.engines)
 
                 # If the room was a valid one, show it.
                 # The user cannot distinguish between non-existent and
                 # inaccessible chat rooms
                 if room?
+                    Session.set('currentRoom', room)
+                    Session.set('engines', room.engines)
+
                     {
+                        roomName: room.name
                         messages: ChanslateMessages.find({
                             roomId: @params._id
                         })
                     }
                 else
                     null
+
+            action: ->
+                data = @getData()
+                console.log('getData = ', data)
+
+                if data?
+                    # Found a room, let's go to it, do not add the user again
+                    # to it.
+                    @render()
+                else
+                    console.log('@params.secret = ', @params.secret)
+                    if @params.secret?
+                        # The user is trying to add himself to a room
+                        console.log('Trying to add user to the chat-room')
+                        Meteor.call(
+                            'verifyAndAddUser',
+                            @params._id,
+                            @params.secret,
+                            (err, result) =>
+                                if err?
+                                    # The user was not granted access or the
+                                    # room does not exist.
+                                    @render('roomNotFound')
+                                else
+                                    # Merely redirecting isn't enough because
+                                    # the Subscriptions haven't been updated
+                                    # yet. Doing a forced reload.
+                                    # @redirect('room', { _id: @params._id })
+                                    window.location.replace(
+                                        window.location.pathname
+                                    )
+                        )
+                    else
+                        @render('roomNotFound')
         })
     )

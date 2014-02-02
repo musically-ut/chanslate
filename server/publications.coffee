@@ -8,7 +8,6 @@ userRooms = (userId) ->
     })
 
 
-# TODO (UU): This is NOT reactive by default
 Meteor.publish('chanslateRoomAndMessages', (roomId) ->
     check(roomId, String)
 
@@ -45,20 +44,18 @@ Meteor.publish('chanslateRooms', ->
     userRooms(@userId)
 )
 
-# TODO (UU): This is NOT reactive by default
-Meteor.publish('chanslateUsers', ->
+Meteor.reactivePublish('chanslateUsers', ->
     if not @userId?
         return
 
-    rooms = userRooms(@userId).fetch()
-    friendIds = _.flatten(rooms.map(room -> room.users))
-    Meteor.users.find(
-        {
-            _id:
-                $in: friendIds
-        }, {
-            fields:
-                username: 1
-                profile:  0
-        })
+    rooms = userRooms(@userId).fetch({ reactive: true })
+    friendIds =
+        _.flatten(rooms.map((room) -> room.users.map((user) -> user.id)))
+
+    # Excluding `profile` and including `username` field caused problems with
+    # Meteor.
+    Meteor.users.find({
+        _id:
+            $in: _.uniq(friendIds)
+    })
 )

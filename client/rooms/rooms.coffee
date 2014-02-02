@@ -7,12 +7,24 @@ Template.rooms.helpers(
     srcLangInError:     -> Session.get('srcLangInError')
     dstLangInError:     -> Session.get('dstLangInError')
     roomNameInError:    -> Session.get('roomNameInError')
+
+    roomSecretLink:     ->
+        path = Router.routes['room'].path({ _id: @_id }, {
+            query:
+                secret: @secret
+        })
+
+        port = window.location.port
+        origin = window.location.protocol + "//" +
+                 window.location.hostname +
+                 (if port? then ':' + port else '')
+
+        origin + path
 )
 
 Template.rooms.events(
     'submit #new-room-form': (ev, templ) ->
         ev.preventDefault()
-
 
         [roomName, roomSecret, srcLang, dstLang] =
           [ templ.find('[name="room-name"]').value,
@@ -41,8 +53,6 @@ Template.rooms.events(
                 dstLang
             )
             Session.set('showCreateRoomForm', false)
-
-
 
     'click #add-room': (ev, tmpl) ->
         Session.set('showCreateRoomForm', true)
