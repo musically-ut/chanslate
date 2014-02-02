@@ -88,13 +88,25 @@ Template.postMessage.events(
             textBox = template.find('[name="src"]')
             text = textBox.value
 
+            currentRoom = Session.get('currentRoom')
+
+            if not currentRoom?
+                alert('Not inside a room?')
+                return
+
+            if not Meteor.user()?
+                alert('User not logged in?')
+                return
+
             if text.length > 0
                 Meteor.call(
                     'addSrcMessage',
                     Meteor.user()._id,
-                    Session.get('currentRoom')._id
+                    currentRoom._id
                     text,
-                    Session.get('engines')
+                    Session.get('engines'),
+                    currentRoom.srcLang
+                    currentRoom.dstLang
                 )
 
             textBox.value = ''
@@ -106,13 +118,25 @@ Template.postMessage.events(
             textBox = template.find('[name="dst"]')
             text = textBox.value
 
+            currentRoom = Session.get('currentRoom')
+
+            if not currentRoom?
+                alert('Not inside a room?')
+                return
+
+            if not Meteor.user()?
+                alert('User not logged in?')
+                return
+
             if text.length > 0
                 Meteor.call(
                     'addDstMessage',
                     Meteor.user()._id,
-                    Session.get('currentRoom')._id
+                    currentRoom._id
                     text,
-                    Session.get('engines')
+                    Session.get('engines'),
+                    currentRoom.srcLang,
+                    currentRoom.dstLang
                 )
 
             textBox.value = ''

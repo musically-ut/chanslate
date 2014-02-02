@@ -1,6 +1,3 @@
-srcLang = 'en'
-dstLang = 'de'
-
 @getLastMessageTime = ->
     lastMessage = ChanslateMessages.findOne({}, {
         sort:
@@ -9,7 +6,7 @@ dstLang = 'de'
     if lastMessage? then lastMessage.at else new Date(0)
 
 Meteor.methods(
-    addSrcMessage: (userId, roomId, msg, engines) ->
+    addSrcMessage: (userId, roomId, msg, engines, srcLang, dstLang) ->
         console.log('Adding src message:', msg, ' ~ ', userId)
 
         if not @isSimulation
@@ -27,7 +24,7 @@ Meteor.methods(
             console.log('inserted message _id: ', _id)
             translateAndPopulate(msg, srcLang, dstLang, engines, _id)
 
-    addDstMessage: (userId, roomId, msg, engines) ->
+    addDstMessage: (userId, roomId, msg, engines, srcLang, dstLang) ->
         console.log('Adding dst message:', msg, ' ~ ', userId)
 
         if not @isSimulation

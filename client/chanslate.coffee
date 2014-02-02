@@ -73,6 +73,9 @@ Meteor.startup ->
                 # inaccessible chat rooms
                 if room?
                     Session.set('currentRoom', room)
+                    # TODO (UU): Remove this hack (which was in place to make
+                    # engines adjustable from inside the rooms). Should be
+                    # replaced by a Deps.autorun call inside room.coffee
                     Session.set('engines', room.engines)
 
                     {
