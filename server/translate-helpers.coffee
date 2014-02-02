@@ -42,8 +42,6 @@ translateUsingGoogle = (text, source, target, cb) ->
             (err, res) ->
                 translatedMsg = 'Google translation failed.'
                 if not err
-                    console.log('Google translate API response:')
-                    console.log(JSON.stringify(res, null, 2))
                     try
                         translatedMsg = res.data.data
                                            .translations[0].translatedText
@@ -52,6 +50,9 @@ translateUsingGoogle = (text, source, target, cb) ->
                             'Google translation failed with exception:',
                             except
                         )
+                else
+                    console.log('Google translate API response:')
+                    console.log(JSON.stringify(res, null, 2))
 
                 cb(err, translatedMsg)
         )
@@ -86,9 +87,6 @@ translateUsingBing = (text, source, target, cb) ->
             (err, res) ->
                 translatedMsg = 'Bing translation failed.'
                 if not err
-                    console.log('Bing translate API response:')
-                    console.log(JSON.stringify(res, null, 2))
-
                     # Data format:
                     #  {
                     #  ...
@@ -107,6 +105,9 @@ translateUsingBing = (text, source, target, cb) ->
                             'Bing translation failed with exception:',
                             except
                         )
+                else
+                    console.log('Bing translate API response:')
+                    console.log(JSON.stringify(res, null, 2))
 
                 cb(err, translatedMsg)
         )
