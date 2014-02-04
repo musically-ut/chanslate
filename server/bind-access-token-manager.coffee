@@ -7,10 +7,8 @@ class @BingAccessTokenManagerFactory
         @tokenFetchTime = null
 
     _requestToken: () ->
-        console.log('@tokenFetchTime = ', @tokenFetchTime)
-        console.log('@tokenBody = ', @tokenBody)
-
         @tokenFetchTime = new Date()
+        console.log('Initiating bing access token request.')
         res = HTTP.call(
             "POST",
             bing_token_url,
@@ -23,8 +21,7 @@ class @BingAccessTokenManagerFactory
             }
         )
 
-        console.log('Access token request response:')
-        console.log(JSON.stringify(res, null, 2))
+        console.log('Access token request succeeded.')
 
         @tokenBody = res.data
 
