@@ -17,7 +17,7 @@ Template.rooms.helpers(
         port = window.location.port
         origin = window.location.protocol + "//" +
                  window.location.hostname +
-                 (if port? then ':' + port else '')
+                 (if port then ':' + port else '')
 
         origin + path
 )
