@@ -1,38 +1,90 @@
-@import "styles/00normalize.lessimport";
+@import "styles/lib/normalize.lessimport";
+@import "styles/lib/lessprefixer.lessimport";
+@import "styles/lib/flexprefixer.lessimport";
+/* apply a natural box layout model to all elements */
+
+*, *:before, *:after {
+  .box-sizing(border-box);
+}
 
 /* CSS declarations go here */
 body, html {
   margin           : 0;
   padding          : 0;
-  background-color : #dff;
   height           : 100%;
   width            : 100%;
   font-family      : 'Open Sans', sans-serif;
 }
 
+/* Pale blues from Adobe:
+ * https://kuler.adobe.com/pale-blues-from-graffiti-pic-color-theme-3459663/
+ */
+@deepest   : #522AA4;
+@deep      : #31588F;
+@middle    : #9CB1CE;
+@light     : #2CAAC1;
+@highlight : #F47B5E;
+
+html { 
+  background : url(/images/bg.png) no-repeat center center fixed;
+  .background-size(cover);
+}
+
+#site-header {
+    padding-left  : 2em;
+    padding-right : 2em;
+    background    : fadeout(desaturate(@deepest, 10%), 10%);
+    color         : desaturate(@light, 10%);
+
+    z-index       : 999;
+    position      : fixed;
+    top           : 0;
+    left          : 0;
+    right         : 0;
+
+    a {
+      color: inherit;
+    }
+
+    .heading {
+      margin-top     : 0;
+      margin-bottom  : 0;
+
+      display        : inline-block;
+      font-family    : 'Ubuntu', sans-serif;
+      font-weight    : bold;
+
+      font-size      : 200%;
+      text-align     : center;
+    }
+
+    .login-buttons-container {
+      float      : right;
+      text-align : right;
+      color      : desaturate(@highlight, 10%);
+
+      #login-buttons {
+        line-height: 2em;
+      }
+    }
+}
+
+
 #container {
-  max-width        : 1024px;
   margin           : auto;
-  background-color : #eff;
+  margin-top       : 2.5em;
+
+  max-width        : 1024px;
+  background-color : fadeout(@middle, 5%);
   color            : #333;
+
+  .box-shadow(15px 0 15px -15px desaturate(@middle, 5%), -15px 0 15px -15px desaturate(@middle, 5%););
+
+  #container-content {
+    padding: 0 1em;
+  }
 }
 
-.heading {
-  font-family    : 'Ubuntu', sans-serif;
-  color          : rgb(0, 10, 10);
-  font-weight    : bold;
-}
-
-h1 {
-  font-size      : 200%;
-  text-align     : center;
-  padding-top    : 1em;
-  padding-bottom : 1em;
-}
-
-.login-buttons-container {
-    text-align: right;
-}
 
 ul.messages {
     padding         : 0;
@@ -90,5 +142,13 @@ ul.messages {
 
         margin-bottom  : 0 !important;
         padding-bottom : 0 !important;
+    }
+}
+
+.rooms-list {
+    .item {
+        .mini.input.secret-link {
+            margin: -0.25em 0 0 0;
+        }
     }
 }

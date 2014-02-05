@@ -1,6 +1,7 @@
+<!-- TODO (UU): Break into smaller templates -->
 <template name="rooms">
   {{#unless showCreateRoomForm}}
-    <button id="add-room" class="ui button fluid small secondary">
+    <button id="add-room" class="ui button fluid small teal">
       <i class="icon add sign"></i>Add Room
     </button>
   {{else}}
@@ -46,7 +47,7 @@
       <div class="field ui buttons floated right">
         <button id    = "cancel-add-room"
                 type  = "button"
-                class = "ui right button">
+                class = "ui button">
           Cancel
         </button>
 
@@ -54,22 +55,32 @@
 
         <button id    = "create-room"
                 type  = "submit"
-                class = "ui right positive button">
+                class = "ui positive button">
           Create
         </button>
       </div>
     </form>
   {{/unless}}
 
-  <div class="ui list">
+  <div class="ui list rooms-list">
     {{#each rooms}}
       <div class="item">
         <i class="chat icon"></i>
 
-          <button class="ui primary floated right icon button js-delete"
-                  data-room-id="{{_id}}">
+        {{#if showConfirmRemove this}}
+          <p>Are you sure you want to
+            {{#if isAdmin}}
+              delete the room?
+            {{else}}
+              leave the room?
+            {{/if}}
+          </p>
 
-            {{#if equals currentUser._id createdByUserId}}
+        {{else}}
+          <button class= "ui primary floated right icon button js-delete"
+                  type = "button">
+
+            {{#if isAdmin}}
               <i class="icon trash" title="Delete this room"></i>
             {{else}}
               <i class="icon minus" title="Remove yourself from this room"></i>
@@ -77,15 +88,16 @@
 
           </button>
 
+        {{/if}}
+
         <div class="content">
           <div class="header">
-            <a class="ui link" href="{{ pathFor 'room' }}">
+            <a class="ui link" href="{{pathFor 'room'}}">
               {{name}}
             </a>
-
           </div>
 
-          <div class="description ui horizontal list">
+          <div class="description ui horizontal list room-tags">
 
             <div class="item">
               <label class="ui label">
@@ -111,7 +123,7 @@
             </div>
 
              <div class="item">
-               <div class="ui mini icon input">
+               <div class="ui mini icon input secret-link">
                  <input type  = "text"
                        value  = "{{roomSecretLink}}"
                        title  = "Copy and share this link to add users to this chat room"

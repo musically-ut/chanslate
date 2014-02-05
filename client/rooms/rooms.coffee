@@ -1,12 +1,22 @@
 Session.set('showCreateRoomForm', false)
 Session.set('newRoomSecret', Random.id())
 
+Session.set('roomWithUserListOpen', null)
+Session.set('roomWithConfirmationOpen'  , null)
+
 Template.rooms.helpers(
     showCreateRoomForm: -> Session.get('showCreateRoomForm')
     getNewRoomSecret:   -> Session.get('newRoomSecret')
     srcLangInError:     -> Session.get('srcLangInError')
     dstLangInError:     -> Session.get('dstLangInError')
     roomNameInError:    -> Session.get('roomNameInError')
+
+    showConfirmRemove: (room) ->
+        Session.equals('roomWithConfirmationOpen', room._id)
+
+    isAdmin: ->
+        user = Meteor.user()
+        if user? then user._id == @createdByUserId else false
 
     roomSecretLink:     ->
         path = Router.routes['room'].path({ _id: @_id }, {
@@ -15,14 +25,18 @@ Template.rooms.helpers(
         })
 
         port = window.location.port
-        origin = window.location.protocol + "//" +
-                 window.location.hostname +
+        origin = window.location.protocol + "//" + window.location.hostname +
                  (if port then ':' + port else '')
 
         origin + path
 )
 
+# TODO (UU): Separate out {{room-item}} into a separate template.
 Template.rooms.events(
+    'click .js-delete': (ev, templ) ->
+        ev.preventDefault()
+        Session.set('roomWithConfirmationOpen', @_id)
+
     'submit #new-room-form': (ev, templ) ->
         ev.preventDefault()
 

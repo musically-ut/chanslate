@@ -4,7 +4,6 @@
     "semantic-ui-less": {},
     "npm": {},
     "moment": {},
-    "iron-router": {},
-    "reactive-publish": {}
+    "iron-router": {}
   }
 }

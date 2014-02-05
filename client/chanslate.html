@@ -7,16 +7,18 @@
 </head>
 
 <body>
-  <div id="container">
-    <div class="ui sixteen wide column">
-      <h1 class="ui header banner">Chanslate</h1>
+  <div id="site-header">
+    <a href="/">
+      <h1 class="heading">Chanslate</h1>
+    </a>
 
-      <div class="row login-buttons-container">
-        {{loginButtons align="right"}}
-      </div>
+    <div class="login-buttons-container">
+      {{loginButtons align="right"}}
     </div>
+  </div>
 
-    <div id="chanslate-content">
+  <div id="container">
+    <div id="container-content">
       {{renderRouter}}
     </div>
   </div>

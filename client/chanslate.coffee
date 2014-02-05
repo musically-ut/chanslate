@@ -3,6 +3,8 @@ Meteor.startup ->
     #################
     # "Friends"
     #################
+    # TODO: Re-run the subscription based on updates made to
+    # @ChanslateRooms.
     Meteor.subscribe('chanslateUsers')
 
     ##################
@@ -33,7 +35,6 @@ Meteor.startup ->
     })
 
     Router.map( ->
-
         # This is the default path, redirects to `/rooms` after logging in
         @route('signIn', {
             path: '/'

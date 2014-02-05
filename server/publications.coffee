@@ -44,11 +44,11 @@ Meteor.publish('chanslateRooms', ->
     userRooms(@userId)
 )
 
-Meteor.reactivePublish('chanslateUsers', ->
+Meteor.publish('chanslateUsers', ->
     if not @userId?
         return
 
-    rooms = userRooms(@userId).fetch({ reactive: true })
+    rooms = userRooms(@userId).fetch()
     friendIds =
         _.flatten(rooms.map((room) -> room.users.map((user) -> user.id)))
 
