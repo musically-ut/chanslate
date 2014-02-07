@@ -25,16 +25,19 @@ body, html {
 @light     : #2CAAC1;
 @highlight : #F47B5E;
 
-html { 
+html {
   background : url(/images/bg.png) no-repeat center center fixed;
   .background-size(cover);
 }
 
 #site-header {
-    padding-left  : 2em;
-    padding-right : 2em;
-    background    : fadeout(desaturate(@deepest, 10%), 10%);
-    color         : desaturate(@light, 10%);
+    @bg           : fadeout(desaturate(@deepest, 10%), 10%);
+    padding-left  : 20%;
+    padding-right : 20%;
+    background    : @bg;
+    color         : desaturate(@highlight, 20%);
+
+    .box-shadow(0 5px 5px 0px @bg);
 
     z-index       : 999;
     position      : fixed;
@@ -70,19 +73,31 @@ html {
 }
 
 
+@container-bg: fadeout(@middle, 5%);
 #container {
   margin           : auto;
-  margin-top       : 2.5em;
 
   max-width        : 1024px;
-  background-color : fadeout(@middle, 5%);
+  min-height       : 100%;
+  background-color : @container-bg;
   color            : #333;
 
-  .box-shadow(15px 0 15px -15px desaturate(@middle, 5%), -15px 0 15px -15px desaturate(@middle, 5%););
+  .box-shadow(5px 2px 5px -3px @container-bg, -5px 2px 5px -3px @container-bg;);
+
 
   #container-content {
-    padding: 0 1em;
+    padding: 1em;
+    padding-top: 3.5em;
   }
+}
+
+.ui.segment {
+    background-color: darken(@container-bg, 5%);
+    color: #eee;
+
+    &.attached {
+        .box-shadow(0 0 0 1px darken(@container-bg, 10%));
+    }
 }
 
 
@@ -145,10 +160,25 @@ ul.messages {
     }
 }
 
-.rooms-list {
+.ui.list.rooms {
     .item {
-        .mini.input.secret-link {
-            margin: -0.25em 0 0 0;
+        /* Such shenanigans to align the input box and labels */
+        .ui.label {
+            margin-top: 0;
+        }
+        .ui.mini.input.icon.secret-link {
+            .icon {
+                padding-top: 0.65em;
+            }
+
+            margin-top: -0.125em;
+            input {
+                border: 0;
+                padding-top: 0.7em;
+                padding-bottom: 0.7em;
+                // color: ;
+                // background-color: lighten(@light, 10%);
+            }
         }
     }
 }
