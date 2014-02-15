@@ -31,13 +31,14 @@ html {
 }
 
 #site-header {
-    @bg           : fadeout(desaturate(@deepest, 10%), 10%);
-    padding-left  : 20%;
-    padding-right : 20%;
-    background    : @bg;
-    color         : desaturate(@highlight, 20%);
+    @bg              : @deepest;
+    @bg-border       : desaturate(@deepest, 20%);
+    padding-left     : 20%;
+    padding-right    : 20%;
+    background-image : linear-gradient(to bottom, @bg 0, @bg-border 75%);
+    color            : desaturate(@highlight, 20%);
 
-    .box-shadow(0 5px 5px 0px @bg);
+    .box-shadow(0 5px 5px 0px @bg-border);
 
     z-index       : 999;
     position      : fixed;
@@ -61,13 +62,34 @@ html {
       text-align     : center;
     }
 
+    .about.button {
+        float        : right;
+        margin-right : 4em;
+        margin-top   : 0.5em;
+    }
+
     .login-buttons-container {
       float      : right;
       text-align : right;
-      color      : desaturate(@highlight, 10%);
+      color      : desaturate(@highlight, 20%);
+      background-image: linear-gradient(to bottom, @deep 0, darken(@deep, 5%) 75%);
+
+      margin-top    : 5px;
+      border        : 1px @deep solid;
+      border-radius : 1em;
+      .transition(color 200ms, background-image 200ms;);
+
+      &:hover {
+        color            : @highlight;
+        background-image : linear-gradient(to top, @deep 0, darken(@deep, 5%) 75%);
+      }
 
       #login-buttons {
-        line-height: 2em;
+        a {
+            display     : inline-block;
+            padding     : 0em 2em;
+            line-height : 2em;
+        }
       }
     }
 }
