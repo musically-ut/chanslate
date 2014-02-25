@@ -16,6 +16,13 @@ body, html {
   font-family      : 'Open Sans', sans-serif;
 }
 
+.chanslate {
+    color : lighten(@highlight, 10%);
+    &.deep {
+        color : @highlight;
+    }
+}
+
 /* Pale blues from Adobe:
  * https://kuler.adobe.com/pale-blues-from-graffiti-pic-color-theme-3459663/
  */
@@ -28,6 +35,10 @@ body, html {
 html {
   background : url(/images/bg.png) repeat center center fixed;
   .background-size(auto auto);
+}
+
+.header {
+   font-family    : 'Ubuntu', sans-serif;
 }
 
 #site-header {
@@ -68,6 +79,7 @@ html {
         margin-top   : 0.5em;
     }
 
+    /** Styling the login dropdown */
     .login-buttons-container {
       float      : right;
       text-align : right;
@@ -77,11 +89,16 @@ html {
       margin-top    : 5px;
       border        : 1px @deep solid;
       border-radius : 1em;
-      .transition(color 200ms, background-image 200ms;);
+      .transition(color 500ms, background-image 500ms;);
 
       &:hover {
         color            : @highlight;
         background-image : linear-gradient(to top, @deep 0, darken(@deep, 5%) 75%);
+      }
+
+      #login-dropdown-list {
+          background-color : @deep;
+          color            : #eee;
       }
 
       #login-buttons {
@@ -89,8 +106,25 @@ html {
             display     : inline-block;
             padding     : 0em 2em;
             line-height : 2em;
+            cursor      : pointer;
         }
       }
+
+      input {
+        color: @deepest;
+      }
+
+      /* For later reference: This is the layout of the login buttons:
+      <div class="login-buttons-container">
+        <div id="login-buttons" class="login-buttons-dropdown-align-right">
+            <div class="login-link-and-dropdown-list">
+                <a id="login-name-link" class="login-link-text"></a>
+                <div id="login-dropdown-list" class="accounts-dialog">
+                    <a class="login-close-text"></a>
+                    <div class="login-close-text-clear"></div>
+                    <div id="login-buttons-open-change-password" class="login-button"></div>
+                    <div id="login-buttons-logout" class="login-button"></div>
+      */
     }
 }
 
@@ -116,6 +150,18 @@ html {
 .ui.segment {
     background-color: darken(@container-bg, 5%);
     color: #eee;
+
+    a {
+        text-decoration : none;
+        border-bottom   : 1px dashed @middle;
+        color           : lighten(@middle, 10%);
+        .transition(color 500ms, border-bottom-color 500ms;);
+
+        &:hover {
+            color               : @light;
+            border-bottom-color : @light;
+        }
+    }
 
     &.attached {
         .box-shadow(0 0 0 1px darken(@container-bg, 10%));
@@ -204,3 +250,5 @@ ul.messages {
         }
     }
 }
+
+

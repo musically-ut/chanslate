@@ -13,9 +13,9 @@ less
 collection2
 semantic-ui-less
 moment
-accounts-ui
 npm
 accounts-password
 iron-router
 random
 reload
+accounts-ui

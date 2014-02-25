@@ -45,14 +45,13 @@ Meteor.startup ->
                     Router.go('rooms')
         })
 
-
         # The list of all rooms
         @route('rooms', {
             path: '/rooms'
             waitOn: ->
                 Meteor.subscribe('chanslateRooms')
             data:
-                rooms: ChanslateRooms.find({})
+                rooms: ChanslateRooms.find()
         })
 
         # Showing one particular chat room, or allowing access to one.
