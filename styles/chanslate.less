@@ -7,6 +7,8 @@
   .box-sizing(border-box);
 }
 
+@transition-time: 250ms;
+
 /* CSS declarations go here */
 body, html {
   margin           : 0;
@@ -89,7 +91,7 @@ html {
       margin-top    : 5px;
       border        : 1px @deep solid;
       border-radius : 1em;
-      .transition(color 500ms, background-image 500ms;);
+      .transition(color @transition-time, background-image @transition-time;);
 
       &:hover {
         color            : @highlight;
@@ -147,6 +149,16 @@ html {
   }
 }
 
+.ui.popup {
+    @popup-bg: @deep;
+    background-color : @popup-bg;
+    color            : #eee;
+
+    &:before {
+        background-color : @popup-bg;
+    }
+}
+
 .ui.segment {
     background-color: darken(@container-bg, 5%);
     color: #eee;
@@ -155,7 +167,7 @@ html {
         text-decoration : none;
         border-bottom   : 1px dashed @middle;
         color           : lighten(@middle, 10%);
-        .transition(color 500ms, border-bottom-color 500ms;);
+        .transition(color @transition-time, border-bottom-color @transition-time;);
 
         &:hover {
             color               : @light;

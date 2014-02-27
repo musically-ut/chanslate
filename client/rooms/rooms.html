@@ -79,13 +79,18 @@
                   type = "button">
 
             {{#if isAdmin}}
-              <i class="icon trash" title="Delete this room"></i>
+              <i class          = "icon trash tooltip"
+                 data-content   = "Delete this room"
+                 data-variation = "small">
+              </i>
             {{else}}
-              <i class="icon minus" title="Remove yourself from this room"></i>
+              <i class          = "icon minus tooltip"
+                 data-content   = "Remove yourself from this room"
+                 data-variation = "small">
+              </i>
             {{/if}}
 
           </button>
-
         {{/if}}
 
         <div class="content">
@@ -97,7 +102,9 @@
 
           <div class="description ui horizontal list room-tags">
 
-            <div class="item">
+            <div class          = "item tooltip"
+                 data-content   = "Creation time"
+                 data-variation = "small">
               <label class="ui small label">
                 <i class="icon time"></i>
                 <time class="js-auto-update" datetime="{{toISO createdAt}}">
@@ -106,26 +113,32 @@
               </label>
             </div>
 
-            <div class="item">
-              <label class="ui small label">
+            <div class          = "item tooltip"
+                 data-content   = "Number of members"
+                 data-variation = "small">
+              <label class = "ui small label">
                 <i class="icon users"></i>
                 {{count users}}
               </label>
             </div>
 
-            <div class="item">
-              <label class="ui small label">
+            <div class          = "item tooltip"
+                 data-content   = "Created by"
+                 data-variation = "small">
+
+              <label class = "ui small label">
                 <i class="icon star"></i>
                 {{username createdByUserId}}
               </label>
             </div>
 
-             <div class="item">
+             <div class          = "item tooltip"
+                  data-content   = "Share this link to add members"
+                  data-variation = "small">
                <div class="content">
-                 <div class="ui mini icon input secret-link">
+                 <div class = "ui mini icon input secret-link">
                    <input type  = "text"
                          value  = "{{roomSecretLink}}"
-                         title  = "Copy and share this link to add users to this chat room"
                          readonly />
                    <i class="disabled icon url"></i>
                  </div>

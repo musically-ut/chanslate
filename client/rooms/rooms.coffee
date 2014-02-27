@@ -77,3 +77,8 @@ Template.rooms.events(
         Session.set('showCreateRoomForm', false)
 )
 
+Template.rooms.rendered = ->
+    $('.tooltip').popup({
+        transition: 'fade up'
+    })
+
