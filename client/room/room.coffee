@@ -64,6 +64,10 @@ Template.postMessage.bingChecked = ->
 Template.postMessage.googleChecked =  ->
     if 'google' in Session.get('engines') then 'checked' else ''
 
+# Should listen to `transitionend` event on the <input> elements, but browser
+# support for it is pretty flaky. Hence, using this hack to allow SemanticUI
+# transitions to take place.
+transitionTime = 250
 Template.postMessage.events(
     'focus input': (ev, template) ->
         isInputFocussed = true
@@ -76,11 +80,16 @@ Template.postMessage.events(
         isInputFocussed = false
 
     'click input[name="google"]':  ->
-        toggleEngine('google')
+        Meteor.setTimeout(
+            -> toggleEngine('google'),
+            transitionTime
+        )
 
     'click input[name="bing"]': ->
-        toggleEngine('bing')
-
+        Meteor.setTimeout(
+            -> toggleEngine('bing'),
+            transitionTime
+        )
 
     'keyup input[name="src"]': (ev, template) ->
         if ev.which == 13
