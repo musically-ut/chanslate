@@ -20,7 +20,7 @@ Meteor.publish('chanslateRoomAndMessages', (roomId) ->
         return
 
     # Serve only the last 200 messages
-    count = ChanslateMessages.find().count()
+    count = ChanslateMessages.find({ roomId: roomId }).count()
     skip = Math.max(0, count - 200)
     msgs = ChanslateMessages.find(
         {
