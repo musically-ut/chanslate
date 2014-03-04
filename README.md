@@ -1,4 +1,4 @@
-This is the Chanslate app.
+This is the [Chanslate app](http://chanslate.in).
 
 ## Dependencies
 
