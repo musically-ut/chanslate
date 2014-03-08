@@ -66,13 +66,15 @@
         <i class="chat icon"></i>
 
         {{#if showConfirmRemove this}}
-          <p>Are you sure you want to
-            {{#if isAdmin}}
-              delete the room?
-            {{else}}
-              leave the room?
-            {{/if}}
-          </p>
+          <div class="confirmation">
+            Sure?
+            <button class="ui button mini js-cancel-confirmation">
+                No
+            </button>
+            <button data-room-id="{{_id}}" class="ui button mini red js-verify-confirmation">
+                Yes
+            </button>
+          </div>
 
         {{else}}
           <button class= "ui primary floated right icon button js-delete"

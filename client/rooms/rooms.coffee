@@ -75,6 +75,12 @@ Template.rooms.events(
 
     'click #cancel-add-room': (ev, tmpl) ->
         Session.set('showCreateRoomForm', false)
+
+    'click .js-verify-confirmation': (ev, tmpl) ->
+        Meteor.call('deleteRoomOrMember', $(ev.target).data('room-id'));
+
+    'click .js-cancel-confirmation': (ev, tmpl) ->
+        Session.set('roomWithConfirmationOpen', null)
 )
 
 Template.rooms.rendered = ->

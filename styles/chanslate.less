@@ -253,11 +253,26 @@ ul.messages {
 
             margin-top: -0.125em;
             input {
-                border: 0;
-                padding-top: 0.7em;
-                padding-bottom: 0.7em;
-                // color: ;
-                // background-color: lighten(@light, 10%);
+                border         : 0;
+                padding-top    : 0.7em;
+                padding-bottom : 0.7em;
+            }
+        }
+
+        position: relative;
+
+        .confirmation {
+            position         : absolute;
+            padding          : 0.25em 1em;
+            right            : 1em;
+            top              : 0.25em;
+            background-color : @deep;
+            border           : 1px @deep solid;
+            border-radius    : 0.25em;
+
+            .ui.mini.button {
+                padding-top    : 0.3em;
+                padding-bottom : 0.3em;
             }
         }
     }
