@@ -23,7 +23,7 @@
     {{#each messages}}
       <li class="ui">
         <div class="msg-info">
-          <span class="user-name" style="color:{{#colorize}}{{/colorize}}">
+          <span class="user-name" style="color:{{#colorize userId}}{{/colorize}}">
             {{username userId}}
           </span>
 
@@ -105,13 +105,13 @@
     <div class="column ui form">
       <span class="field">
         <input name="src" type="text"
-               placeholder="{{srcLangPlaceholder}}" />
+               placeholder="{{nativeName srcLang 'first language'}}" />
       </span>
     </div>
     <div class="column ui form">
       <span class="field">
         <input name="dst" type="text"
-               placeholder="{{dstLangPlaceholder}}" />
+               placeholder="{{nativeName dstLang 'second language'}}" />
       </span>
     </div>
   </form>

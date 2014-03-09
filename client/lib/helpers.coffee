@@ -30,9 +30,16 @@ colorHandle = (handle) ->
     sumi = 0
     sumi += handle.charCodeAt(i) for i in [0 .. (handle.length - 1)]
     hue = sumi % 360
-    'hsl('+hue+',46%,75%)'
+    'hsl('+hue+',46%,90%)'
 
-Handlebars.registerHelper('colorize', -> colorHandle(this["userId"]))
+Handlebars.registerHelper('colorize', (userId) -> colorHandle(userId))
+
+placeholderMsg = (langName) -> 'Type in ' + langName
+
+Handlebars.registerHelper('nativeName', (langCode, defaultLang) ->
+    langName = getCanonicalNativeName(langCode || '')
+    placeholderMsg(langName || defaultLang)
+)
 
 @scrollToBottom = _.debounce(
     ->
