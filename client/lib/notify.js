@@ -105,6 +105,12 @@
         });
     };
 
+    Notify.prototype.close = function () {
+        if (this.myNotify) {
+            this.myNotify.close();
+        }
+    };
+
     Notify.prototype.show = function () {
 
         if (!this.isSupported()) {

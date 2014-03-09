@@ -16,6 +16,8 @@ Template.requestNotificationPermission.events(
         makeNotification(body).requestPermission()
 )
 
+currentNotification = null
+
 # Template helpers
 Template.showMessages.helpers({
     messages: ->
@@ -29,7 +31,8 @@ Template.showMessages.helpers({
                 havePermission = Session.get('haveNotificationPermission')
                 if not isInputFocussed and havePermission
                     body = Session.get('pendingMessagesNotificationBody')
-                    makeNotification(body).show()
+                    currentNotification = makeNotification(body)
+                    currentNotification.show()
         })
         cursor
 
@@ -70,6 +73,11 @@ Template.postMessage.googleChecked =  ->
 transitionTime = 250
 Template.postMessage.events(
     'focus input': (ev, template) ->
+        # If the user focusses the input box, close the notifications
+        if currentNotification?
+            currentNotification.close()
+            currentNotification = null
+
         isInputFocussed = true
 
     'blur input': (ev, template) ->
