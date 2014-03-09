@@ -3,6 +3,11 @@ isInputFocussed = false
 Meteor.startup ->
     setUpNotification(getLastMessageTime())
 
+#######################################
+# Notification Permission template
+#######################################
+
+
 Template
     .requestNotificationPermission
     .needsPermissionAndSupported = ->
@@ -17,6 +22,10 @@ Template.requestNotificationPermission.events(
 )
 
 currentNotification = null
+
+#######################################
+# ShowMessage template
+#######################################
 
 # Template helpers
 Template.showMessages.helpers({
@@ -52,6 +61,10 @@ Template.showMessages.helpers({
 })
 
 
+#######################################
+# PostMessage template
+#######################################
+
 toggleEngine = (engineName) ->
     engines = Session.get('engines')
     if engineName in engines
@@ -66,6 +79,17 @@ Template.postMessage.bingChecked = ->
 
 Template.postMessage.googleChecked =  ->
     if 'google' in Session.get('engines') then 'checked' else ''
+
+placeholderMsg = (langName) -> 'Type in ' + langName
+
+Template.postMessage.srcLangPlaceholder = ->
+    langName = getCanonicalNativeName(Session.get('currentRoom').srcLang || '')
+    placeholderMsg(langName || 'first language')
+
+Template.postMessage.dstLangPlaceholder = ->
+    langName = getCanonicalNativeName(Session.get('currentRoom').dstLang || '')
+    placeholderMsg(langName || 'second language')
+
 
 # Should listen to `transitionend` event on the <input> elements, but browser
 # support for it is pretty flaky. Hence, using this hack to allow SemanticUI
