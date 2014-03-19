@@ -5,59 +5,7 @@
       <i class="icon add sign"></i>Add Room
     </button>
   {{else}}
-    <form id="new-room-form" class="ui small form fluid segment">
-      <div class="two fields">
-        <div class="field {{roomNameInError}}">
-          <label>Room Name</label>
-          <input name        = "room-name"
-                 class       = "required"
-                 type        = "text"
-                 value       = ""
-                 placeholder = "Room name" />
-        </div>
-
-        <div class="disabled field {{roomSecretInError}}">
-          <label>Room Secret</label>
-          <!-- May make this editable later -->
-          <input name        = "room-secret"
-                 type        = "text"
-                 value       = "{{getNewRoomSecret}}"
-                 disabled />
-        </div>
-      </div>
-
-      <div class="two fields">
-        <div class="field {{srcLangInError}}">
-          <label>Source language (code)</label>
-          <input name        = "src-lang"
-                 type        = "text"
-                 value       = "en"
-                 placeholder = "Source language code">
-        </div>
-
-        <div class="field {{dstLangInError}}">
-          <label>Destination language (code)</label>
-          <input name        = "dst-lang"
-                 type        = "text"
-                 value       = "de"
-                 placeholder = "Destination language code">
-        </div>
-      </div>
-
-      <div class="field ui buttons floated right">
-        <button id    = "cancel-add-room"
-                type  = "button"
-                class = "ui button">
-          Cancel
-        </button>
-
-        <button id    = "create-room"
-                type  = "submit"
-                class = "ui positive button">
-          Create
-        </button>
-      </div>
-    </form>
+    {{> newRoomForm}}
   {{/unless}}
 
   <div class="ui list rooms">
@@ -152,4 +100,77 @@
       </div>
     {{/each}}
   </div>
+</template>
+
+<template name="newRoomForm">
+   <form id="new-room-form" class="ui small form fluid segment">
+      <div class="two fields">
+        <div class="field {{roomNameInError}}">
+          <label>Room Name</label>
+          <input name        = "room-name"
+                 class       = "required"
+                 type        = "text"
+                 value       = ""
+                 placeholder = "Room name" />
+        </div>
+
+        <div class="disabled field {{roomSecretInError}}">
+          <label>Room Secret</label>
+          <!-- May make this editable later -->
+          <input name        = "room-secret"
+                 type        = "text"
+                 value       = "{{getNewRoomSecret}}"
+                 disabled />
+        </div>
+      </div>
+
+      <div class="two fields">
+        <div class="field {{srcLangInError}}">
+          <label>Source language</label>
+          <select name  = "src-lang"
+                  class = "language-select"
+                  value = "en">
+
+             {{#each supportedLangs}}
+               {{! Can this be written as inline? }}
+               {{#unless equals code "en"}}
+                 <option value="{{code}}">{{name}}</option>
+               {{else}}
+                 <option value="{{code}}" selected>{{name}}</option>
+               {{/unless}}
+             {{/each}}
+          </select>
+        </div>
+
+        <div class="field {{dstLangInError}}">
+          <label>Destination language</label>
+          <select name  = "dst-lang"
+                  class = "language-select"
+                  value = "de">
+
+             {{#each supportedLangs}}
+               {{#unless equals code "de"}}
+                 <option value="{{code}}">{{name}}</option>
+               {{else}}
+                 <option value="{{code}}" selected>{{name}}</option>
+               {{/unless}}
+             {{/each}}
+          </select>
+        </div>
+      </div>
+
+      <div class="field ui buttons floated right">
+        <button id    = "cancel-add-room"
+                type  = "button"
+                class = "ui button">
+          Cancel
+        </button>
+
+        <button id    = "create-room"
+                type  = "submit"
+                class = "ui positive button">
+          Create
+        </button>
+      </div>
+    </form>
 </template>

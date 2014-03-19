@@ -753,9 +753,165 @@ isoLangs =
 
 @getCanonicalNativeName = (key) ->
     langName = getLanguageNativeName(key)
-    commaIndex = langName.indexOf(',')
-    if commaIndex != -1
-        langName.slice(0, commaIndex)
-    else
-        langName
+    if langName?
+        commaIndex = langName.indexOf(',')
+        semiColonIndex = langName.indexOf(';')
 
+        firstLangIdx  = if commaIndex != -1 then commaIndex else semiColonIndex
+
+        if firstLangIdx != -1
+            langName.slice(0, firstLangIdx)
+        else
+            langName
+    else
+        undefined
+
+# This data can be fetched at runtime by making calls to the API, but I do not
+# expect the support to change at a very rapid pace. Also, the google codes
+# for Chinese language work in Bing but not vice versa.
+bingSupportedLanguages = [
+        { code:'ar'       , name: 'Arabic'              } ,
+        { code:'bg'       , name: 'Bulgarian'           } ,
+        { code:'ca'       , name: 'Catalan'             } ,
+        # { code:'zh-CHS'   , name: 'Chinese Simplified'  } ,
+        # { code:'zh-CHT'   , name: 'Chinese Traditional' } ,
+        { code:'zh-CN'    , name: 'Chinese Simplified'  } ,
+        { code:'zh-TW'    , name: 'Chinese Traditional' } ,
+
+        { code:'cs'       , name: 'Czech'               } ,
+        { code:'da'       , name: 'Danish'              } ,
+        { code:'nl'       , name: 'Dutch'               } ,
+        { code:'en'       , name: 'English'             } ,
+        { code:'et'       , name: 'Estonian'            } ,
+        { code:'fi'       , name: 'Finnish'             } ,
+        { code:'fr'       , name: 'French'              } ,
+        { code:'de'       , name: 'German'              } ,
+        { code:'el'       , name: 'Greek'               } ,
+        { code:'ht'       , name: 'Haitian Creole'      } ,
+        { code:'he'       , name: 'Hebrew'              } ,
+        { code:'hi'       , name: 'Hindi'               } ,
+        { code:'mww'      , name: 'Hmong Daw'           } ,
+        { code:'hu'       , name: 'Hungarian'           } ,
+        { code:'id'       , name: 'Indonesian'          } ,
+        { code:'it'       , name: 'Italian'             } ,
+        { code:'ja'       , name: 'Japanese'            } ,
+        { code:'tlh'      , name: 'Klingon'             } ,
+        { code:'tlh-Qaak' , name: 'Klingon (pIqaD)'     } ,
+        { code:'ko'       , name: 'Korean'              } ,
+        { code:'lv'       , name: 'Latvian'             } ,
+        { code:'lt'       , name: 'Lithuanian'          } ,
+        { code:'ms'       , name: 'Malay'               } ,
+        { code:'mt'       , name: 'Maltese'             } ,
+        { code:'no'       , name: 'Norwegian'           } ,
+        { code:'fa'       , name: 'Persian'             } ,
+        { code:'pl'       , name: 'Polish'              } ,
+        { code:'pt'       , name: 'Portuguese'          } ,
+        { code:'ro'       , name: 'Romanian'            } ,
+        { code:'ru'       , name: 'Russian'             } ,
+        { code:'sk'       , name: 'Slovak'              } ,
+        { code:'sl'       , name: 'Slovenian'           } ,
+        { code:'es'       , name: 'Spanish'             } ,
+        { code:'sv'       , name: 'Swedish'             } ,
+        { code:'th'       , name: 'Thai'                } ,
+        { code:'tr'       , name: 'Turkish'             } ,
+        { code:'uk'       , name: 'Ukrainian'           } ,
+        { code:'ur'       , name: 'Urdu'                } ,
+        { code:'vi'       , name: 'Vietnamese'          } ,
+        { code:'cy'       , name: 'Welsh'               }
+    ]
+
+# This data can be fetched at runtime by making calls to the API, but I do not
+# expect the support to change at a very rapid pace.
+googleSupportedLanguages = [
+        { name: 'Afrikaans'           , code: 'af' }    ,
+        { name: 'Albanian'            , code: 'sq' }    ,
+        { name: 'Arabic'              , code: 'ar' }    ,
+        { name: 'Azerbaijani'         , code: 'az' }    ,
+        { name: 'Basque'              , code: 'eu' }    ,
+        { name: 'Bengali'             , code: 'bn' }    ,
+        { name: 'Belarusian'          , code: 'be' }    ,
+        { name: 'Bulgarian'           , code: 'bg' }    ,
+        { name: 'Catalan'             , code: 'ca' }    ,
+        { name: 'Chinese Simplified'  , code: 'zh-CN' } ,
+        { name: 'Chinese Traditional' , code: 'zh-TW' } ,
+        { name: 'Croatian'            , code: 'hr' }    ,
+        { name: 'Czech'               , code: 'cs' }    ,
+        { name: 'Danish'              , code: 'da' }    ,
+        { name: 'Dutch'               , code: 'nl' }    ,
+        { name: 'English'             , code: 'en' }    ,
+        { name: 'Esperanto'           , code: 'eo' }    ,
+        { name: 'Estonian'            , code: 'et' }    ,
+        { name: 'Filipino'            , code: 'tl' }    ,
+        { name: 'Finnish'             , code: 'fi' }    ,
+        { name: 'French'              , code: 'fr' }    ,
+        { name: 'Galician'            , code: 'gl' }    ,
+        { name: 'Georgian'            , code: 'ka' }    ,
+        { name: 'German'              , code: 'de' }    ,
+        { name: 'Greek'               , code: 'el' }    ,
+        { name: 'Gujarati'            , code: 'gu' }    ,
+        { name: 'Haitian Creole'      , code: 'ht' }    ,
+        # Here, I think, Bing's choice of code is better and more conforming.
+        # { name: 'Hebrew'              , code: 'iw' }    ,
+        { name: 'Hebrew'              , code: 'he' }    ,
+        { name: 'Hindi'               , code: 'hi' }    ,
+        { name: 'Hungarian'           , code: 'hu' }    ,
+        { name: 'Icelandic'           , code: 'is' }    ,
+        { name: 'Indonesian'          , code: 'id' }    ,
+        { name: 'Irish'               , code: 'ga' }    ,
+        { name: 'Italian'             , code: 'it' }    ,
+        { name: 'Japanese'            , code: 'ja' }    ,
+        { name: 'Kannada'             , code: 'kn' }    ,
+        { name: 'Korean'              , code: 'ko' }    ,
+        { name: 'Latin'               , code: 'la' }    ,
+        { name: 'Latvian'             , code: 'lv' }    ,
+        { name: 'Lithuanian'          , code: 'lt' }    ,
+        { name: 'Macedonian'          , code: 'mk' }    ,
+        { name: 'Malay'               , code: 'ms' }    ,
+        { name: 'Maltese'             , code: 'mt' }    ,
+        { name: 'Norwegian'           , code: 'no' }    ,
+        { name: 'Persian'             , code: 'fa' }    ,
+        { name: 'Polish'              , code: 'pl' }    ,
+        { name: 'Portuguese'          , code: 'pt' }    ,
+        { name: 'Romanian'            , code: 'ro' }    ,
+        { name: 'Russian'             , code: 'ru' }    ,
+        { name: 'Serbian'             , code: 'sr' }    ,
+        { name: 'Slovak'              , code: 'sk' }    ,
+        { name: 'Slovenian'           , code: 'sl' }    ,
+        { name: 'Spanish'             , code: 'es' }    ,
+        { name: 'Swahili'             , code: 'sw' }    ,
+        { name: 'Swedish'             , code: 'sv' }    ,
+        { name: 'Tamil'               , code: 'ta' }    ,
+        { name: 'Telugu'              , code: 'te' }    ,
+        { name: 'Thai'                , code: 'th' }    ,
+        { name: 'Turkish'             , code: 'tr' }    ,
+        { name: 'Ukrainian'           , code: 'uk' }    ,
+        { name: 'Urdu'                , code: 'ur' }    ,
+        { name: 'Vietnamese'          , code: 'vi' }    ,
+        { name: 'Welsh'               , code: 'cy' }    ,
+        { name: 'Yiddish'             , code: 'yi' }
+    ]
+
+
+# Using the "name" of the language as the primary key to identify the
+# languages
+getCombinedLangDict = ->
+    combinedLangDict = {}
+
+    googleSupportedLanguages.forEach (googLang) ->
+        if not combinedLangDict[googLang.name]?
+            combinedLangDict[googLang.name] = {}
+
+        _.extend(combinedLangDict[googLang.name], { googleCode: googLang.code })
+
+
+    bingSupportedLanguages.forEach (bingLang) ->
+        if not combinedLangDict[bingLang.name]?
+            combinedLangDict[bingLang.name] = {}
+
+        _.extend(combinedLangDict[bingLang.name], { bingCode: bingLang.code })
+
+    combinedLangDict
+
+@supportedLangs = _.pairs(getCombinedLangDict())
+                    .filter((kv) -> kv[1].googleCode? && kv[1].bingCode?)
+                    .map((kv) -> { name: kv[0], code: kv[1].googleCode })
