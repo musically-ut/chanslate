@@ -30,7 +30,7 @@ colorHandle = (handle) ->
     sumi = 0
     sumi += handle.charCodeAt(i) for i in [0 .. (handle.length - 1)]
     hue = sumi % 360
-    'hsl('+hue+',46%,90%)'
+    'hsl('+hue+',46%,50%)'
 
 Handlebars.registerHelper('colorize', (userId) -> colorHandle(userId))
 

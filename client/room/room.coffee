@@ -45,6 +45,23 @@ Template.showMessages.helpers({
         })
         cursor
 
+    messageSenderClass: ->
+        if Meteor.user() && Meteor.user()._id == @userId
+            "self"
+        else
+            "other"
+
+    hasFirstTranslation: ->
+        @translations.length > 0
+
+    getFirstTranslation: ->
+        arr = @translations
+        if arr.length > 0
+            arr[0]
+        else
+            undefined
+
+
     enumTranslations: ->
         arr = @translations
         arr.map((item,index) ->
@@ -60,6 +77,17 @@ Template.showMessages.helpers({
         )
 })
 
+#######################################
+# Avatar template
+#######################################
+
+Template.avatar.createdByBing = ->
+    console.log(this)
+    @createdBy == 'bing'
+
+Template.avatar.createdByGoogle = ->
+    console.log(this)
+    @createdBy == 'google'
 
 #######################################
 # PostMessage template

@@ -21,57 +21,70 @@
 <template name="showMessages">
   <ul class="messages">
     {{#each messages}}
-      <li class="ui">
-        <div class="msg-info">
-          <span class="user-name" style="color:{{#colorize userId}}{{/colorize}}">
-            {{username userId}}
-          </span>
+      <li class="message-container {{messageSenderClass}}">
 
-          <span class="ui small label time">
-            <i class="icon time"></i>
-            <time class="js-auto-update" datetime="{{toISO at}}">
-              {{ago at}}
-            </time>
-          </span>
+        <div class="user message-column">
+
+          {{>avatar original}}
+
+          <div class="message">
+            {{>message original}}
+            {{>messageFooter}}
+          </div>
         </div>
 
-        <div class="ui msg-detail">
-            <div class="ui top attached src message-box segment">
-              {{>message original}}
+        <div class="robot message-column">
+          {{#if hasFirstTranslation}}
+            {{>avatar getFirstTranslation}}
+            <div class="message">
+                {{>message getFirstTranslation}}
+                {{>messageFooter}}
             </div>
-
-            {{#each enumTranslations}}
-              {{#if equals $indexBaseOne ../engines.length}}
-                <div class="ui attached bottom dst message-box segment">
-                  {{>message}}
-                </div>
-              {{else}}
-                <div class="ui attached dst message-box segment">
-                  {{>message}}
-                </div>
-              {{/if}}
-            {{/each}}
-
-            {{#unless equals translations.length engines.length}}
-              <div class="ui bottom attached dst message-box segment">
-                <p>Translating ... <i class="icon loading"></i></p>
-              </div>
-            {{/unless}}
+          {{else}}
+            <p>Translating ... <i class="icon loading"></i></p>
+          {{/if}}
+          </div>
         </div>
       </li>
     {{/each}}
   </ul>
 </template>
 
+<template name="avatar">
+    <div class="avatar">
+      {{#if createdByBing}}
+          <img src   = "/images/bing-translate-icon.png"
+               title = "Bing translator"
+               alt   = "Bing"
+           />
+      {{else}}
+        {{#if createdByGoogle}}
+          <img src   = "/images/google-translate-icon.png"
+               title = "Google translator"
+               alt   = "Google" />
+        {{else}}
+          <img src="/images/musicallyut.png" />
+        {{/if}}
+      {{/if}}
+    </div>
+</template>
+
 <template name="message">
-  <p class="message">
+  <p>
     {{unescape text}}
-    {{>msgInfo}}
   </p>
 </template>
 
-<template name="msgInfo">
-  <label class="ui label info">{{lang}} / {{createdBy}}</label>
+<template name="messageFooter">
+  <div class="footer">
+    <time class="js-auto-update" datetime="{{toISO at}}">
+      {{ago at}}
+    </time>
+    .
+    <span class="user-name" style="color:{{#colorize userId}}{{/colorize}}">
+      {{username userId}}
+    </span>
+  </div>
 </template>
 
 <template name="postMessage">
