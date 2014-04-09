@@ -23,26 +23,26 @@
     {{#each messages}}
       <li class="message-container {{messageSenderClass}}">
 
-        <div class="user message-column">
+        <div class="message-column">
 
           {{>avatar original}}
 
           <div class="message">
-            {{>message original}}
+            <p class="original">{{unescape original.text}}</p>
+            <hr class="separator"></hr>
+            {{#if hasFirstTranslation}}
+              <p class="translation">
+                {{#if createdByGoogle}}
+                  <img src = "/images/google-translate-icon.png" />
+                {{else}}
+                  <img src = "/images/bing-translate-icon.png" />
+                {{/if}}
+                {{getFirstTranslation.text}}
+              </p>
+            {{else}}
+              <p class="translation">Translating ... <i class="icon loading"></i></p>
+            {{/if}}
             {{>messageFooter}}
-          </div>
-        </div>
-
-        <div class="robot message-column">
-          {{#if hasFirstTranslation}}
-            {{>avatar getFirstTranslation}}
-            <div class="message">
-                {{>message getFirstTranslation}}
-                {{>messageFooter}}
-            </div>
-          {{else}}
-            <p>Translating ... <i class="icon loading"></i></p>
-          {{/if}}
           </div>
         </div>
       </li>
@@ -51,28 +51,13 @@
 </template>
 
 <template name="avatar">
-    <div class="avatar">
-      {{#if createdByBing}}
-          <img src   = "/images/bing-translate-icon.png"
-               title = "Bing translator"
-               alt   = "Bing"
-           />
-      {{else}}
-        {{#if createdByGoogle}}
-          <img src   = "/images/google-translate-icon.png"
-               title = "Google translator"
-               alt   = "Google" />
-        {{else}}
-          <img src="/images/musicallyut.png" />
-        {{/if}}
-      {{/if}}
-    </div>
+  <div class="avatar">
+    <img src="{{gravatarLink}}" />
+  </div>
 </template>
 
 <template name="message">
-  <p>
-    {{unescape text}}
-  </p>
+  <p>{{unescape text}}</p>
 </template>
 
 <template name="messageFooter">

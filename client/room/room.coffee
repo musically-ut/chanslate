@@ -61,7 +61,6 @@ Template.showMessages.helpers({
         else
             undefined
 
-
     enumTranslations: ->
         arr = @translations
         arr.map((item,index) ->
@@ -75,19 +74,29 @@ Template.showMessages.helpers({
                 item
             )
         )
+
+    createdByGoogle: ->
+        firstTranslation = @translations[0]
+        firstTranslation? and firstTranslation.createdBy == 'google'
+
+    createdByBing: ->
+        firstTranslation = @translations[0]
+        firstTranslation? and firstTranslation.createdBy == 'bing'
+
 })
 
 #######################################
 # Avatar template
 #######################################
 
-Template.avatar.createdByBing = ->
-    console.log(this)
-    @createdBy == 'bing'
+Template.avatar.gravatarLink = ->
+    user = Meteor.users && Meteor.users.findOne({ _id: @createdBy })
 
-Template.avatar.createdByGoogle = ->
-    console.log(this)
-    @createdBy == 'google'
+    console.log('Created by user = ', user)
+    # Eventually, move to using user e-mail here instead of username
+    username = if user? then user.username else @createdBy
+    hash = hex_md5(username)
+    '//www.gravatar.com/avatar/' + hash + '?d=wavatar'
 
 #######################################
 # PostMessage template
