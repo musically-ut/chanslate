@@ -92,7 +92,6 @@ Template.showMessages.helpers({
 Template.avatar.gravatarLink = ->
     user = Meteor.users && Meteor.users.findOne({ _id: @createdBy })
 
-    console.log('Created by user = ', user)
     # Eventually, move to using user e-mail here instead of username
     username = if user? then user.username else @createdBy
     hash = hex_md5(username)

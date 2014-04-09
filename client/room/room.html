@@ -37,7 +37,7 @@
                 {{else}}
                   <img src = "/images/bing-translate-icon.png" />
                 {{/if}}
-                {{getFirstTranslation.text}}
+                {{unescape getFirstTranslation.text}}
               </p>
             {{else}}
               <p class="translation">Translating ... <i class="icon loading"></i></p>
