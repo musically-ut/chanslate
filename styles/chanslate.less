@@ -43,11 +43,12 @@ html {
    font-family    : 'Ubuntu', sans-serif;
 }
 
+@max-width: 1024px;
+
 #site-header {
     @bg              : @deepest;
     @bg-border       : desaturate(@deepest, 20%);
-    padding-left     : 20%;
-    padding-right    : 20%;
+    margin           : auto;
     background-image : linear-gradient(to bottom, @bg 0, @bg-border 75%);
     color            : desaturate(@highlight, 20%);
 
@@ -59,74 +60,79 @@ html {
     left          : 0;
     right         : 0;
 
-    a {
-      color: inherit;
-    }
+    .container {
+        margin           : auto;
+        max-width        : @max-width;
 
-    .heading {
-      margin-top     : 0;
-      margin-bottom  : 0;
-
-      display        : inline-block;
-      font-family    : 'Ubuntu', sans-serif;
-      font-weight    : bold;
-
-      font-size      : 200%;
-      text-align     : center;
-    }
-
-    .about.button {
-        float        : right;
-        margin-right : 4em;
-        margin-top   : 0.5em;
-    }
-
-    /** Styling the login dropdown */
-    .login-buttons-container {
-      float      : right;
-      text-align : right;
-      color      : desaturate(@highlight, 20%);
-      background-image: linear-gradient(to bottom, @deep 0, darken(@deep, 5%) 75%);
-
-      margin-top    : 5px;
-      border        : 1px @deep solid;
-      border-radius : 1em;
-      .transition(color @transition-time, background-image @transition-time;);
-
-      &:hover {
-        color            : @highlight;
-        background-image : linear-gradient(to top, @deep 0, darken(@deep, 5%) 75%);
-      }
-
-      #login-dropdown-list {
-          background-color : @deep;
-          color            : #eee;
-      }
-
-      #login-buttons {
         a {
-            display     : inline-block;
-            padding     : 0em 2em;
-            line-height : 2em;
-            cursor      : pointer;
+          color: inherit;
         }
-      }
 
-      input {
-        color: @deepest;
-      }
+        .heading {
+          margin-top     : 0;
+          margin-bottom  : 0;
 
-      /* For later reference: This is the layout of the login buttons:
-      <div class="login-buttons-container">
-        <div id="login-buttons" class="login-buttons-dropdown-align-right">
-            <div class="login-link-and-dropdown-list">
-                <a id="login-name-link" class="login-link-text"></a>
-                <div id="login-dropdown-list" class="accounts-dialog">
-                    <a class="login-close-text"></a>
-                    <div class="login-close-text-clear"></div>
-                    <div id="login-buttons-open-change-password" class="login-button"></div>
-                    <div id="login-buttons-logout" class="login-button"></div>
-      */
+          display        : inline-block;
+          font-family    : 'Ubuntu', sans-serif;
+          font-weight    : bold;
+
+          font-size      : 200%;
+          text-align     : center;
+        }
+
+        .about.button {
+            float        : right;
+            margin-right : 4em;
+            margin-top   : 0.5em;
+        }
+
+        /** Styling the login dropdown */
+        .login-buttons-container {
+          float      : right;
+          text-align : right;
+          color      : desaturate(@highlight, 20%);
+          background-image: linear-gradient(to bottom, @deep 0, darken(@deep, 5%) 75%);
+
+          margin-top    : 5px;
+          border        : 1px @deep solid;
+          border-radius : 1em;
+          .transition(color @transition-time, background-image @transition-time;);
+
+          &:hover {
+            color            : @highlight;
+            background-image : linear-gradient(to top, @deep 0, darken(@deep, 5%) 75%);
+          }
+
+          #login-dropdown-list {
+              background-color : @deep;
+              color            : #eee;
+          }
+
+          #login-buttons {
+            a {
+                display     : inline-block;
+                padding     : 0em 2em;
+                line-height : 2em;
+                cursor      : pointer;
+            }
+          }
+
+          input {
+            color: @deepest;
+          }
+
+          /* For later reference: This is the layout of the login buttons:
+          <div class="login-buttons-container">
+            <div id="login-buttons" class="login-buttons-dropdown-align-right">
+                <div class="login-link-and-dropdown-list">
+                    <a id="login-name-link" class="login-link-text"></a>
+                    <div id="login-dropdown-list" class="accounts-dialog">
+                        <a class="login-close-text"></a>
+                        <div class="login-close-text-clear"></div>
+                        <div id="login-buttons-open-change-password" class="login-button"></div>
+                        <div id="login-buttons-logout" class="login-button"></div>
+          */
+        }
     }
 }
 
@@ -135,7 +141,7 @@ html {
 #container {
   margin           : auto;
 
-  max-width        : 1024px;
+  max-width        : @max-width;
   min-height       : 100%;
   background-color : @container-bg;
   color            : #333;
