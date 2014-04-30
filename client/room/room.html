@@ -8,8 +8,7 @@
 
 <template name="roomNotFound">
   {{>backButton}}
-  <p>Sorry, the room you tried to access is either not available or doesn't
-  exist.</p>
+  <p>Sorry, the room you tried to access is either not available or doesn't exist.</p>
 </template>
 
 <template name="backButton">
@@ -24,12 +23,11 @@
       <li class="message-container {{messageSenderClass}}">
 
         <div class="message-column">
-
           {{>avatar original}}
-
           <div class="message">
             <p class="original">{{unescape original.text}}</p>
-            <hr class="separator"></hr>
+            {{! TODO (UU): Why doesn't this work? }}
+            {{! <hr class="separator"></hr> }}
             {{#if hasFirstTranslation}}
               <p class="translation">
                 {{#if createdByGoogle}}
@@ -56,17 +54,13 @@
   </div>
 </template>
 
-<template name="message">
-  <p>{{unescape text}}</p>
-</template>
-
 <template name="messageFooter">
   <div class="footer">
     <time class="js-auto-update" datetime="{{toISO at}}">
       {{ago at}}
     </time>
-    .
-    <span class="user-name" style="color:{{#colorize userId}}{{/colorize}}">
+    <span class="interpunct">·</span>
+    <span class="user-name" style="color:{{colorize userId}}">
       {{username userId}}
     </span>
   </div>

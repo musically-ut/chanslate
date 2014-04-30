@@ -14,7 +14,7 @@ semantic-ui-less
 moment
 npm
 accounts-password
-iron-router
 random
 reload
 accounts-ui
+iron-router

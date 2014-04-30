@@ -89,7 +89,6 @@ Meteor.startup ->
 
             action: ->
                 data = @getData()
-                console.log('getData = ', data)
 
                 if data?
                     # Found a room, let's go to it, do not add the user again
