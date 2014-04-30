@@ -20,17 +20,30 @@ Meteor.startup ->
 
     # To provide our own template instead of appending route templates to body
     Router.configure(
-        autoRender: false
+        layoutTemplate: 'masterLayout'
+        loadingTemplate: 'loadingTemplate'
     )
 
     # If the user is not signed in, render the signin template instead of the
     # actual page. However, keep the URL the same.
-    mustBeSignedIn = ->
+    mustBeSignedIn = (pause) ->
         if not Meteor.user()?
-            @render(if Meteor.loggingIn() then 'signingIn' else 'signIn')
-            @stop()
+            if Meteor.loggingIn()
+                @render('signingIn',
+                    yieldTemplates:
+                        signingIn:
+                            to: 'content'
+                )
+            else
+                @render('signIn'
+                    yieldTemplates:
+                        signIn:
+                            to: 'content'
+                )
 
-    Router.before(mustBeSignedIn, {
+            pause()
+
+    Router.onBeforeAction(mustBeSignedIn, {
         except: [ 'signIn' ]
     })
 
@@ -38,16 +51,22 @@ Meteor.startup ->
         # This is the default path, redirects to `/rooms` after logging in
         @route('signIn', {
             path: '/'
-            before: ->
+            yieldTemplates:
+                signIn:
+                    to: 'content'
+
+            onBeforeAction: ->
                 # If user is logged in, take him to list of rooms
                 if Meteor.user()?
-                    @stop()
                     Router.go('rooms')
         })
 
         # The list of all rooms
         @route('rooms', {
             path: '/rooms'
+            yieldTemplates:
+                rooms:
+                    to: 'content'
             waitOn: ->
                 Meteor.subscribe('chanslateRooms')
             data:
@@ -57,6 +76,9 @@ Meteor.startup ->
         # Showing one particular chat room, or allowing access to one.
         @route('room', {
             path: '/room/:_id'
+            yieldTemplates:
+                room:
+                    to: 'content'
             waitOn: ->
                 # This causes both `room` and `messages` to be loaded before
                 # proceeding with the rendering of the template
@@ -88,36 +110,37 @@ Meteor.startup ->
                     null
 
             action: ->
-                data = @getData()
-
-                if data?
-                    # Found a room, let's go to it, do not add the user again
-                    # to it.
-                    @render()
-                else
-                    console.log('@params.secret = ', @params.secret)
-                    if @params.secret?
-                        # The user is trying to add himself to a room
-                        console.log('Trying to add user to the chat-room')
-                        Meteor.call(
-                            'verifyAndAddUser',
-                            @params._id,
-                            @params.secret,
-                            (err, result) =>
-                                if err?
-                                    # The user was not granted access or the
-                                    # room does not exist.
-                                    @render('roomNotFound')
-                                else
-                                    # Merely redirecting isn't enough because
-                                    # the Subscriptions haven't been updated
-                                    # yet. Doing a forced reload.
-                                    # @redirect('room', { _id: @params._id })
-                                    window.location.replace(
-                                        window.location.pathname
-                                    )
-                        )
+                if @ready()
+                    data = @data()
+                    if data?
+                        # Found a room, let's go to it, do not add the user
+                        # again to it.
+                        @render()
                     else
-                        @render('roomNotFound')
+                        console.log('@params.secret = ', @params.secret)
+                        if @params.secret?
+                            # The user is trying to add himself to a room
+                            console.log('Trying to add user to the chat-room')
+                            Meteor.call(
+                                'verifyAndAddUser',
+                                @params._id,
+                                @params.secret,
+                                (err, result) =>
+                                    if err?
+                                        # The user was not granted access or
+                                        # the room does not exist.
+                                        @render('roomNotFound')
+                                    else
+                                        # Merely redirecting isn't enough
+                                        # because the Subscriptions haven't
+                                        # been updated yet. Doing a forced
+                                        # reload. @redirect('room', { _id:
+                                        # @params._id })
+                                        window.location.replace(
+                                            window.location.pathname
+                                        )
+                            )
+                        else
+                            @render('roomNotFound')
         })
     )

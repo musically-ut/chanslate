@@ -6,7 +6,7 @@
   <title>Chanslate</title>
 </head>
 
-<body>
+<template name="masterLayout">
   <div id="site-header">
     <div class="container">
       <a href="/">
@@ -14,14 +14,18 @@
       </a>
 
       <div class="login-buttons-container">
-        {{>loginButtons align="right"}}
+        {{> loginButtons align="right" }}
       </div>
     </div>
   </div>
 
   <div id="container">
     <div id="container-content">
-      {{renderRouter}}
+      {{> yield region="content" }}
     </div>
   </div>
-</body>
+</template>
+
+<template name="loadingTemplate">
+  <p class="ui center aligned segment">Loading ... <i class="icon loading"></i></p>
+</template>
