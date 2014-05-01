@@ -3,8 +3,7 @@ Meteor.startup ->
     #################
     # "Friends"
     #################
-    # TODO: Re-run the subscription based on updates made to
-    # @ChanslateRooms.
+    # TODO: Re-run the subscription based on updates made to @ChanslateRooms.
     Meteor.subscribe('chanslateUsers')
 
     ##################
@@ -29,17 +28,9 @@ Meteor.startup ->
     mustBeSignedIn = (pause) ->
         if not Meteor.user()?
             if Meteor.loggingIn()
-                @render('signingIn',
-                    yieldTemplates:
-                        signingIn:
-                            to: 'content'
-                )
+                @render('signingIn')
             else
-                @render('signIn'
-                    yieldTemplates:
-                        signIn:
-                            to: 'content'
-                )
+                @render('signIn')
 
             pause()
 
@@ -51,10 +42,7 @@ Meteor.startup ->
         # This is the default path, redirects to `/rooms` after logging in
         @route('signIn', {
             path: '/'
-            yieldTemplates:
-                signIn:
-                    to: 'content'
-
+            template: 'signIn'
             onBeforeAction: ->
                 # If user is logged in, take him to list of rooms
                 if Meteor.user()?
@@ -64,9 +52,7 @@ Meteor.startup ->
         # The list of all rooms
         @route('rooms', {
             path: '/rooms'
-            yieldTemplates:
-                rooms:
-                    to: 'content'
+            template: 'rooms'
             waitOn: ->
                 Meteor.subscribe('chanslateRooms')
             data:
@@ -76,9 +62,7 @@ Meteor.startup ->
         # Showing one particular chat room, or allowing access to one.
         @route('room', {
             path: '/room/:_id'
-            yieldTemplates:
-                room:
-                    to: 'content'
+            template: 'room'
             waitOn: ->
                 # This causes both `room` and `messages` to be loaded before
                 # proceeding with the rendering of the template
