@@ -3,6 +3,7 @@
     "collection2": {},
     "semantic-ui-less": {},
     "npm": {},
-    "moment": {}
+    "moment": {},
+    "iron-router": {}
   }
 }
