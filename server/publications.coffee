@@ -8,16 +8,19 @@ userRooms = (userId) ->
     })
 
 
+# On returning `undefined` from publications, the subscriptions never become
+# ready?
 Meteor.publish('chanslateRoomAndMessages', (roomId) ->
     check(roomId, String)
 
     if not @userId?
-        return
+        return []
 
     roomIds = userRooms(@userId).fetch().map((e) -> e._id)
     if _.indexOf(roomIds, roomId) == -1
-        console.error('Tried to access an illegal room')
-        return
+        console.error('Tried to access the room with id: ',
+            roomId, ' which does not yet exist.')
+        return []
 
     # Serve only the last 200 messages
     count = ChanslateMessages.find({ roomId: roomId }).count()
@@ -39,14 +42,14 @@ Meteor.publish('chanslateRoomAndMessages', (roomId) ->
 
 Meteor.publish('chanslateRooms', ->
     if not @userId?
-        return
+        return []
 
     userRooms(@userId)
 )
 
 Meteor.publish('chanslateUsers', ->
     if not @userId?
-        return
+        return []
 
     rooms = userRooms(@userId).fetch()
     friendIds =

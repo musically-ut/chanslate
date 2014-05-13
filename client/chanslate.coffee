@@ -95,6 +95,10 @@ Meteor.startup ->
 
             action: ->
                 if @ready()
+                    console.log('Taking action with secret: ', @params.secret)
+                    # TODO (UU): Unclear whether we want to do this or not.  We
+                    # _probably_ don't want to call the `data` function again
+                    # to get the data, because it might not be idempotent.
                     data = @data()
                     if data?
                         # Found a room, let's go to it, do not add the user
@@ -126,5 +130,8 @@ Meteor.startup ->
                             )
                         else
                             @render('roomNotFound')
+                else
+                    @render('loadingTemplate')
+
         })
     )
