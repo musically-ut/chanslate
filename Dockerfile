@@ -1,4 +1,4 @@
-# Install Chanslate platform and run development environment
+# Install Chanslate in a container
 
 FROM ubuntu:14.04
 MAINTAINER Utkarsh Upadhyay "mail@musicallyut.in"
@@ -21,10 +21,11 @@ RUN chmod g+s          /data/chanslate
 
 # Now act as that user
 USER chanslate
-ENV HOME /home/chanslate
+# Docker does not set the user home dir by default (#2968)
+ENV HOME /home/chanslate 
 
 # Install meteor and meteorite (only locally, sans sudo access)
-RUN echo "prefix = ~/.node" >> ~/.npmrc  # Otherwise, npm will need `sudo` access
+RUN echo "prefix = ~/.node" >> ~/.npmrc  
 RUN curl https://install.meteor.com/ | sh
 RUN npm install -g meteorite meteor-npm forever
 
@@ -37,7 +38,7 @@ RUN mkdir -p /data/chanslate/dist/
 RUN cd /data/chanslate/chanslate-src/ && ~/.meteor/meteor bundle /data/chanslate/dist/chanslate.tar.gz
 RUN cd /data/chanslate/dist/          && tar xvf chanslate.tar.gz
 
-# The Meteor App should run on port 3000
+# The Meteor App should run on port 3000 and binds to 0.0.0.0 so that host can connect to it
+ENV BIND_IP 0.0.0.0
 ENV PORT 3000
-
-CMD forever dist/bundle/main.js
+CMD ~/.node/bin/forever dist/bundle/main.js
