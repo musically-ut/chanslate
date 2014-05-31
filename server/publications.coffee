@@ -19,7 +19,7 @@ Meteor.publish('chanslateRoomAndMessages', (roomId) ->
     roomIds = userRooms(@userId).fetch().map((e) -> e._id)
     if _.indexOf(roomIds, roomId) == -1
         console.error('Tried to access the room with id: ',
-            roomId, ' which does not yet exist.')
+            roomId, ' which does not yet exist for this user.')
         return []
 
     # Serve only the last 200 messages
@@ -51,9 +51,50 @@ Meteor.publish('chanslateUsers', ->
     if not @userId?
         return []
 
-    rooms = userRooms(@userId).fetch()
+    self = @
+    rooms = userRooms(@userId)
+
+    addUsersByIds = (userIds) ->
+        userIds.forEach((userId) ->
+            self.added(
+                'users',
+                userId,
+                Meteor.users.findOne({ _id: userId })
+            )
+        )
+
+    # If this user's rooms change, then we should update the list of users that
+    # the user can see.
+    roomObserverHandle = rooms.observeChanges({
+        added: (id, room) ->
+            console.log('Adding users: ', room.users)
+            addUsersByIds(room.users.map((user) -> user.id))
+
+        changed: (id, roomFields) ->
+            if roomFields.users?
+                # This DOES NOT remove the user information if the user has
+                # been removed from the room. This can be done if we use
+                # .observe() since the `changed` function would then get the
+                # old and the new document. However, using `.observe` is more
+                # computationally expensive than .observeChanges and the
+                # security risk is not very great.
+                console.log('Users field changed: ', roomFields.users)
+                addUsersByIds(roomFields.users.map((user) -> user.id))
+
+        removed: (id) ->
+            room = ChanslateRooms.findOne({ _id: id })
+            console.log('Removing users: ', room.users)
+            room.users.map((user) -> self.removed('users', user.id))
+    })
+
+    # Stop observing the rooms when the client stops this subscription
+    @.onStop(() ->
+        console.log('Stopping roomObserverHandle')
+        roomObserverHandle.stop()
+    )
+
     friendIds =
-        _.flatten(rooms.map((room) -> room.users.map((user) -> user.id)))
+      _.flatten(rooms.fetch().map((room) -> room.users.map((user) -> user.id)))
 
     # Excluding `profile` and including `username` field caused problems with
     # Meteor.

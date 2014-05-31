@@ -3,7 +3,6 @@ Meteor.startup ->
     #################
     # "Friends"
     #################
-    # TODO: Re-run the subscription based on updates made to @ChanslateRooms.
     Meteor.subscribe('chanslateUsers')
 
     ##################
