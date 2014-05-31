@@ -29,14 +29,16 @@ RUN echo "prefix = ~/.node" >> ~/.npmrc
 RUN curl https://install.meteor.com/ | sh
 RUN npm install -g meteorite meteor-npm forever
 
-# Fetch and install the dependencies of Chanslate
-RUN git clone https://github.com/musically-ut/chanslate.git chanslate-src
-RUN cd /data/chanslate/chanslate-src  && ~/.node/bin/mrt install
-
-# Bundle the app and prepare for launch
-RUN mkdir -p /data/chanslate/dist/
-RUN cd /data/chanslate/chanslate-src/ && ~/.meteor/meteor bundle /data/chanslate/dist/chanslate.tar.gz
-RUN cd /data/chanslate/dist/          && tar xvf chanslate.tar.gz
+# Fetch and install the dependencies of Chanslate, Bundle the app and prepare
+# for launch
+RUN git clone https://github.com/musically-ut/chanslate.git chanslate-src 
+    && cd /data/chanslate/chanslate-src  
+    && ~/.node/bin/mrt install 
+    && mkdir -p /data/chanslate/dist/ 
+    && cd /data/chanslate/chanslate-src/ 
+    && ~/.meteor/meteor bundle /data/chanslate/dist/chanslate.tar.gz
+    && cd /data/chanslate/dist/ 
+    && tar xvf chanslate.tar.gz
 
 # The Meteor App should run on port 3000 and binds to 0.0.0.0 so that host can connect to it
 ENV BIND_IP 0.0.0.0
