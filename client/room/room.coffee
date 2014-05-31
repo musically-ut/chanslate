@@ -42,6 +42,12 @@ Template.showMessages.helpers({
                     body = Session.get('pendingMessagesNotificationBody')
                     currentNotification = makeNotification(body)
                     currentNotification.show()
+                    soundElem = document.getElementById("notification-sound")
+                    if soundElem.play?
+                        soundElem.play()
+                    else
+                        console.log('Audio play is not supported')
+
         })
         cursor
 
