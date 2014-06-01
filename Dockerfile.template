@@ -33,6 +33,7 @@ RUN npm install -g meteorite meteor-npm forever
 # for launch
 RUN git clone https://github.com/musically-ut/chanslate.git chanslate-src \
     && cd /data/chanslate/chanslate-src  \
+    && git checkout __VERSION \
     && ~/.node/bin/mrt install \
     && mkdir -p /data/chanslate/dist/ \
     && cd /data/chanslate/chanslate-src/ \
