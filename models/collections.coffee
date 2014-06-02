@@ -16,7 +16,7 @@ UserSummary = new SimpleSchema({
         type: String
 })
 
-@ChanslateMessages = new Meteor.Collection2(
+@ChanslateMessages = new Meteor.Collection(
     'chanslateMessages',
     {
         schema:
@@ -47,7 +47,7 @@ ChanslateMessages.allow({
 })
 
 
-@ChanslateRooms = new Meteor.Collection2(
+@ChanslateRooms = new Meteor.Collection(
     'chanslateRooms',
     {
         schema:
