@@ -17,5 +17,6 @@ accounts-password
 random
 reload
 accounts-ui
-iron-router
 audit-argument-checks
+iron:router
+
