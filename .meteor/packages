@@ -9,7 +9,6 @@ coffeescript
 underscore
 jquery
 less
-collection2
 semantic-ui-less
 moment
 npm
@@ -19,4 +18,5 @@ reload
 accounts-ui
 audit-argument-checks
 iron:router
+aldeed:collection2
 
