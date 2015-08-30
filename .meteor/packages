@@ -9,9 +9,9 @@ coffeescript
 underscore
 jquery
 less
-semantic-ui-less
-moment
-npm
+semantic:ui-css
+mrt:moment
+meteorhacks:npm
 accounts-password
 random
 reload
@@ -20,3 +20,6 @@ audit-argument-checks
 iron:router
 aldeed:collection2
 
+
+
+npm-container
