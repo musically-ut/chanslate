@@ -11,7 +11,6 @@
   <div class="ui list rooms">
     {{#each rooms}}
       <div class="item ui segment">
-        <i class="chat icon"></i>
 
         {{#if showConfirmRemove this}}
           <div class="confirmation">
@@ -25,7 +24,7 @@
           </div>
 
         {{else}}
-          <button class= "ui primary floated right icon button js-delete"
+          <button class= "ui primary right floated icon button js-delete"
                   type = "button">
 
             {{#if isAdmin}}
@@ -42,6 +41,9 @@
 
           </button>
         {{/if}}
+
+
+        <i class="chat icon"></i>
 
         <div class="content">
           <div class="header">
@@ -97,6 +99,7 @@
 
           </div>
         </div>
+
       </div>
     {{/each}}
   </div>
