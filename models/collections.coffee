@@ -41,9 +41,9 @@ UserSummary = new SimpleSchema({
 
 
 ChanslateMessages.allow({
-    insert: false
-    update: false
-    remove: false
+    insert: () -> false
+    update: () -> false
+    remove: () -> false
 })
 
 
@@ -72,9 +72,9 @@ ChanslateMessages.allow({
 )
 
 ChanslateRooms.allow({
-    insert: false
-    update: false
-    remove: false
+    insert: () -> false
+    update: () -> false
+    remove: () -> false
 })
 
 # The Users table is automatically created
