@@ -1,0 +1,14 @@
+{
+  "name": "chanslate",
+  "version": "1.0.0",
+  "description": "Chanslate.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Utkarsh Upadhyay <musically.ut@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "babel-runtime": "^6.23.0"
+  }
+}
